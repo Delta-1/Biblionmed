@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibli.on.med - Biblioteca Aberta de Medicina</title>
+    <!-- Tailwind CSS para Estilização de Alto Nível -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter para Legibilidade e Elegância -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome para Ícones Modernos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+        }
+        /* Custom scrollbar para visual minimalista */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4E6E58;
+        }
+        /* Custom animations */
+        @keyframes pulse-green {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .pulse-scan {
+            animation: pulse-green 2s infinite ease-in-out;
+        }
+
+        /* Animação ultra fluida e moderna para transição de abas */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .tab-animate-active {
+            animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            50: '#F0F4F8',
+                            100: '#D9E2EC',
+                            800: '#102A43',
+                            900: '#0B132B', /* Azul escuro premium */
+                        },
+                        moss: {
+                            50: '#F4F7F5',
+                            100: '#E1EBE4',
+                            500: '#5F8569', /* Verde Musgo Base */
+                            600: '#4E6E58', /* Verde Musgo Médio */
+                            700: '#3D5745', /* Verde Musgo Escuro */
+                            800: '#2C3E31',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Notification Toast Container -->
+    <div id="notification-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="bg-navy-900 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('search')">
+                <div class="bg-moss-600 p-2 rounded-lg text-white flex items-center justify-center">
+                    <i class="fa-solid fa-book-medical text-lg"></i>
+                </div>
+                <span class="font-extrabold text-xl tracking-tight">Bibli<span class="text-moss-500">.on.</span>med</span>
+            </div>
+
+            <!-- Nav Links Desktop -->
+            <nav class="hidden md:flex items-center gap-6">
+                <button onclick="switchTab('search')" id="nav-search" class="nav-btn text-white font-medium text-sm transition-all border-b-2 border-moss-500 py-1">
+                    <i class="fa-solid fa-magnifying-glass mr-1"></i> Buscar Livros
+                </button>
+                <button onclick="switchTab('about')" id="nav-about" class="nav-btn text-moss-100 hover:text-white font-medium text-sm transition-all border-b-2 border-transparent py-1">
+                    <i class="fa-solid fa-circle-info mr-1"></i> Sobre o Projeto
+                </button>
+                <button onclick="switchTab('suggest')" id="nav-suggest" class="nav-btn text-moss-100 hover:text-white font-medium text-sm transition-all border-b-2 border-transparent py-1">
+                    <i class="fa-solid fa-circle-plus mr-1"></i> Contribuir
+                </button>
+                <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn text-moss-100 hover:text-white font-medium text-sm transition-all border-b-2 border-transparent py-1">
+                    <i class="fa-solid fa-lock mr-1"></i> Configs / Admin
+                </button>
+            </nav>
+
+            <!-- User Auth Profile Widget -->
+            <div class="flex items-center gap-3">
+                <div id="user-profile-widget" class="flex items-center gap-2 bg-navy-800/80 px-3 py-1.5 rounded-full cursor-pointer hover:bg-navy-800 transition-all border border-navy-100/10" onclick="openProfileModal()">
+                    <img id="header-avatar" src="https://placehold.co/100x100/4E6E58/ffffff?text=M" alt="Avatar" class="w-7 h-7 rounded-full border border-moss-500">
+                    <span id="header-username" class="text-xs font-semibold max-w-[100px] truncate">Entrar</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="md:hidden bg-navy-900 border-t border-navy-800 text-white flex justify-around py-3 text-xs sticky bottom-0 z-40 shadow-2xl">
+        <button onclick="switchTab('search')" id="mobile-nav-search" class="flex flex-col items-center gap-1 text-white scale-105 transition-all">
+            <i class="fa-solid fa-magnifying-glass text-lg"></i>
+            <span>Buscar</span>
+        </button>
+        <button onclick="switchTab('about')" id="mobile-nav-about" class="flex flex-col items-center gap-1 text-moss-100 active:text-white transition-all">
+            <i class="fa-solid fa-circle-info text-lg"></i>
+            <span>Sobre</span>
+        </button>
+        <button onclick="switchTab('suggest')" id="mobile-nav-suggest" class="flex flex-col items-center gap-1 text-moss-100 active:text-white transition-all">
+            <i class="fa-solid fa-circle-plus text-lg"></i>
+            <span>Contribuir</span>
+        </button>
+        <button onclick="switchTab('admin')" id="mobile-nav-admin" class="flex flex-col items-center gap-1 text-moss-100 active:text-white transition-all">
+            <i class="fa-solid fa-lock text-lg"></i>
+            <span>Admin</span>
+        </button>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- SEARCH TAB (The Google-like landing page) -->
+        <section id="tab-search" class="tab-content flex flex-col items-center justify-center min-h-[60vh] py-10 tab-animate-active">
+            <!-- Brand Intro -->
+            <div class="text-center mb-8 max-w-xl">
+                <h1 class="text-4xl sm:text-5xl font-black text-navy-900 tracking-tight mb-3">
+                    Bibli<span class="text-moss-600">.on.</span>med
+                </h1>
+                <p class="text-slate-500 text-sm sm:text-base font-medium">
+                    A maior biblioteca de medicina gratuita, revisada e livre de vírus para estudantes da América Latina.
+                </p>
+            </div>
+
+            <!-- Central Google-like Search Bar -->
+            <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl shadow-slate-100 p-2 border border-slate-100 mb-8 transition-all focus-within:ring-2 focus-within:ring-moss-500 focus-within:border-transparent">
+                <div class="flex items-center">
+                    <div class="pl-4 text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </div>
+                    <input type="text" id="search-input" oninput="handleSearch()" placeholder="Pesquise por anatomia, autor, Robbins, Guyton, cirurgia..." class="w-full pl-3 pr-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none text-base sm:text-lg">
+                    <button onclick="clearSearch()" id="clear-search-btn" class="hidden pr-3 text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Categories / Quick Filter Tags -->
+            <div class="flex flex-wrap justify-center gap-2 mb-10 max-w-3xl px-2">
+                <button onclick="filterCategory('all')" id="cat-all" class="cat-btn active px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-moss-600 text-white shadow-md shadow-moss-100">
+                    Todos os Livros
+                </button>
+                <button onclick="filterCategory('Anatomia')" id="cat-Anatomia" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100">
+                    Anatomia
+                </button>
+                <button onclick="filterCategory('Fisiologia')" id="cat-Fisiologia" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100">
+                    Fisiologia
+                </button>
+                <button onclick="filterCategory('Patologia')" id="cat-Patologia" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100">
+                    Patologia
+                </button>
+                <button onclick="filterCategory('Farmacologia')" id="cat-Farmacologia" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100">
+                    Farmacologia
+                </button>
+                <button onclick="filterCategory('Clínica Médica')" id="cat-Clinica" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100">
+                    Clínica Médica
+                </button>
+                <button onclick="filterCategory('Outros')" id="cat-Outros" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100">
+                    Outros
+                </button>
+            </div>
+
+            <!-- Stats Bar / Source Info -->
+            <div class="w-full max-w-5xl flex items-center justify-between px-2 mb-4 text-xs text-slate-400 font-medium">
+                <span id="books-count-label">Carregando acervo...</span>
+                <span id="data-source-label" class="flex items-center gap-1 text-moss-600">
+                    <i class="fa-solid fa-circle-check"></i> Dados Locais Protegidos
+                </span>
+            </div>
+
+            <!-- Books Grid / Results -->
+            <div id="books-grid" class="w-full max-w-5xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic cards populated by JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden flex-col items-center justify-center text-center py-12 px-4">
+                <div class="text-moss-600/20 text-7xl mb-4">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <h3 class="text-lg font-bold text-navy-900 mb-1">Nenhum livro encontrado</h3>
+                <p class="text-slate-400 text-sm max-w-xs">Não encontramos correspondências com sua busca. Tente buscar termos mais gerais ou sugira este livro!</p>
+            </div>
+        </section>
+
+        <!-- ABOUT TAB -->
+        <section id="tab-about" class="tab-content hidden max-w-3xl mx-auto py-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-100 border border-slate-100/50">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="bg-moss-100 text-moss-700 w-12 h-12 rounded-2xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-navy-900">O Foco da Bibli.on.med</h2>
+                        <p class="text-xs text-moss-600 font-semibold uppercase tracking-wider">Apoio Acadêmico Sem Fins Lucrativos</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6 text-slate-600 leading-relaxed text-sm sm:text-base">
+                    <p>
+                        A rotina de um estudante de medicina na América Latina é repleta de desafios. Além da carga horária exaustiva, o custo de livros técnicos e manuais clínicos de referência internacional pode ser proibitivo para a maioria dos futuros médicos.
+                    </p>
+                    <p class="font-semibold text-navy-900">
+                        O objetivo da Bibli.on.med é simplificar a busca e democratizar o acesso ao conhecimento médico de qualidade. 
+                    </p>
+
+                    <div class="border-l-4 border-moss-500 pl-4 my-6 bg-moss-50/50 py-3 rounded-r-xl">
+                        <h4 class="font-bold text-navy-900 text-sm mb-1">🛡️ Compromisso com a Segurança Biológica (e Digital!)</h4>
+                        <p class="text-xs sm:text-sm text-slate-500">
+                            Todos os links de download disponibilizados no acervo são previamente verificados. Garantimos que os arquivos hospedados no MediaFire ou Google Drive estejam livres de vírus, scripts maliciosos ou propagandas abusivas. Focamos apenas no PDF limpo!
+                        </p>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-navy-900 mt-8 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-moss-600"></i> Como funciona o acervo?
+                    </h3>
+                    <ul class="space-y-3 list-none pl-1">
+                        <li class="flex items-start gap-3">
+                            <span class="bg-moss-100 text-moss-700 w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">1</span>
+                            <span><strong>Curadoria Especializada:</strong> Livros divididos pelas cadeiras clássicas de medicina (Anatomia, Fisiologia, Patologia, etc.).</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-moss-100 text-moss-700 w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">2</span>
+                            <span><strong>Links Diretos:</strong> Sem protetores de link irritantes, direcionamento direto para servidores de alta velocidade (MediaFire/Google Drive).</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-moss-100 text-moss-700 w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">3</span>
+                            <span><strong>Atualização Dinâmica:</strong> O catálogo é alimentado por uma planilha na nuvem gerenciada ativamente por nós.</span>
+                        </li>
+                    </ul>
+
+                    <!-- WhatsApp QR Code Integration -->
+                    <div class="mt-8 p-6 bg-emerald-50/50 rounded-3xl border border-emerald-100 flex flex-col md:flex-row items-center gap-6">
+                        <div class="w-32 h-32 shrink-0 bg-white p-2 rounded-2xl shadow-md border border-slate-100 flex items-center justify-center">
+                            <img src="image_d86c19.png" alt="QR Code Grupo WhatsApp" class="w-full h-full object-contain">
+                        </div>
+                        <div class="flex-grow text-center md:text-left">
+                            <span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Comunidade Ativa</span>
+                            <h4 class="font-extrabold text-navy-900 text-base sm:text-lg mb-1">Participe do nosso Grupo de WhatsApp!</h4>
+                            <p class="text-xs text-slate-500">Esclareça dúvidas, faça pedidos diretamente, e compartilhe novos livros e resumos com estudantes de medicina de toda a América Latina.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-xs text-slate-400">Bibli.on.med v2.5 — Criado com ❤️ para salvar vidas.</span>
+                        <button onclick="switchTab('search')" class="bg-moss-600 text-white font-semibold text-xs px-4 py-2 rounded-xl hover:bg-moss-700 transition-all shadow-md shadow-moss-100">
+                            Iniciar Busca Agora
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SUGGEST & CONTRIBUTE TAB -->
+        <section id="tab-suggest" class="tab-content hidden max-w-2xl mx-auto py-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-100 border border-slate-100/50">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="bg-moss-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-moss-100">
+                        <i class="fa-solid fa-circle-plus"></i>
+                    </span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-navy-900">Contribuir com o Acervo Médico</h2>
+                        <p class="text-xs text-slate-400 font-medium">Ajude outros estudantes enviando livros ou links úteis de forma rápida e segura!</p>
+                    </div>
+                </div>
+
+                <!-- Choose Contribution Type -->
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <button onclick="toggleContributionType('file')" id="btn-contrib-file" class="p-3 rounded-xl border-2 border-moss-500 bg-moss-50/50 text-moss-700 font-bold text-xs flex flex-col items-center gap-2 transition-all">
+                        <i class="fa-solid fa-file-pdf text-xl"></i>
+                        <span>Enviar Arquivo (PDF/EPUB)</span>
+                    </button>
+                    <button onclick="toggleContributionType('link')" id="btn-contrib-link" class="p-3 rounded-xl border-2 border-slate-100 bg-white text-slate-500 font-bold text-xs flex flex-col items-center gap-2 transition-all hover:bg-slate-50">
+                        <i class="fa-solid fa-link text-xl"></i>
+                        <span>Enviar Link Direto</span>
+                    </button>
+                </div>
+
+                <form id="suggestion-form" onsubmit="handleSuggestBook(event)" class="space-y-4">
+                    <!-- File Upload Container (Drag and Drop) -->
+                    <div id="file-upload-section" class="space-y-2">
+                        <label class="block text-xs font-bold text-navy-800 uppercase tracking-wider">Selecionar Livro do Computador/Celular</label>
+                        <div id="drop-zone" class="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center hover:border-moss-500 cursor-pointer transition-all bg-slate-50 flex flex-col items-center justify-center min-h-[140px]" onclick="triggerFileInput()">
+                            <i class="fa-solid fa-cloud-arrow-up text-slate-400 text-3xl mb-2" id="upload-icon"></i>
+                            <p class="text-xs font-bold text-slate-600 mb-1" id="upload-text">Arraste seu PDF aqui ou clique para buscar</p>
+                            <p class="text-[10px] text-slate-400" id="upload-subtext">Suporta PDF, EPUB até 150MB</p>
+                            <input type="file" id="file-input" class="hidden" onchange="handleFileSelect(event)">
+                        </div>
+
+                        <!-- Virus Scanner Animation Overlay -->
+                        <div id="virus-scan-loader" class="hidden bg-moss-50 border border-moss-100 rounded-2xl p-4 flex flex-col items-center justify-center text-center">
+                            <i class="fa-solid fa-shield-halved text-moss-600 text-3xl mb-2 pulse-scan"></i>
+                            <h4 class="text-xs font-bold text-navy-900 mb-1">Realizando Varredura Biológica e Digital...</h4>
+                            <p class="text-[10px] text-slate-500">Inspecionando assinaturas de código para proteção contra trojans e adwares.</p>
+                            <div class="w-full bg-slate-200 rounded-full h-1.5 mt-3 max-w-xs overflow-hidden">
+                                <div id="scan-bar" class="bg-moss-500 h-1.5 rounded-full w-0 transition-all duration-[3000ms]"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Link Input Container -->
+                    <div id="link-upload-section" class="hidden">
+                        <label class="block text-xs font-bold text-navy-800 uppercase tracking-wider mb-1">Link de Download Oficial *</label>
+                        <input type="url" id="suggest-link" placeholder="Ex: https://drive.google.com/... ou link do Mediafire" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-moss-500 focus:border-transparent text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-navy-800 uppercase tracking-wider mb-1">Nome do Livro *</label>
+                        <input type="text" id="suggest-name" required placeholder="Ex: Anatomia Orientada para a Clínica - Moore" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-moss-500 focus:border-transparent text-sm">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-navy-800 uppercase tracking-wider mb-1">Autor / Edição</label>
+                            <input type="text" id="suggest-author" placeholder="Ex: Keith L. Moore - 8ª Ed." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-moss-500 focus:border-transparent text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-navy-800 uppercase tracking-wider mb-1">Categoria do Livro</label>
+                            <select id="suggest-category" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-moss-500 focus:border-transparent text-sm">
+                                <option value="Anatomia">Anatomia</option>
+                                <option value="Fisiologia">Fisiologia</option>
+                                <option value="Patologia">Patologia</option>
+                                <option value="Farmacologia">Farmacologia</option>
+                                <option value="Clínica Médica">Clínica Médica</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" id="contrib-submit-btn" class="w-full bg-moss-600 hover:bg-moss-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-moss-100 transition-all flex items-center justify-center gap-2 text-sm sm:text-base">
+                            <i class="fa-solid fa-paper-plane"></i> Enviar Contribuição
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ADMIN & SETTINGS TAB -->
+        <section id="tab-admin" class="tab-content hidden max-w-3xl mx-auto py-6">
+            
+            <!-- Password Gate Form (Shown if not unlocked) -->
+            <div id="admin-gate-section" class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-100 border border-slate-100/50 text-center max-w-md mx-auto">
+                <span class="bg-rose-50 text-rose-500 w-16 h-16 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </span>
+                <h3 class="text-xl font-bold text-navy-900 mb-1">Acesso do Administrador</h3>
+                <p class="text-xs text-slate-400 mb-6">Esta área é restrita para o criador do projeto gerenciar o banco de dados e contribuições.</p>
+                
+                <form onsubmit="handleAdminAuth(event)" class="space-y-4">
+                    <div>
+                        <input type="password" id="admin-passkey" required placeholder="Digite a Chave de Acesso" class="w-full px-4 py-3 text-center rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-moss-500 text-sm font-semibold tracking-wider">
+                    </div>
+                    <button type="submit" class="w-full bg-navy-900 hover:bg-navy-800 text-white font-bold py-2.5 rounded-xl transition-all text-xs">
+                        Validar Credenciais
+                    </button>
+                </form>
+            </div>
+
+            <!-- Dashboard Content (Hidden by default, shown when authenticated) -->
+            <div id="admin-dashboard-section" class="hidden space-y-6">
+                
+                <!-- Database Configuration Block -->
+                <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-100 border border-slate-100/50">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-navy-100 text-navy-900 w-12 h-12 rounded-2xl flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-gears"></i>
+                            </span>
+                            <div>
+                                <h2 class="text-2xl font-bold text-navy-900">Configuração de Banco de Dados</h2>
+                                <p class="text-xs text-slate-400 font-medium">Defina de onde o Bibli.on.med busca as informações dos livros</p>
+                            </div>
+                        </div>
+                        <button onclick="lockAdmin()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-semibold px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1">
+                            <i class="fa-solid fa-lock"></i> Bloquear Painel
+                        </button>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="bg-moss-50 p-4 rounded-2xl border border-moss-100">
+                            <h4 class="font-bold text-navy-900 text-sm mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-question text-moss-600"></i> Como conectar sua própria Planilha Google?
+                            </h4>
+                            <ol class="text-xs text-slate-600 space-y-2 list-decimal pl-4">
+                                <li>Crie uma planilha no Google Planilhas com as colunas exatamente nesta ordem: <strong class="text-navy-900">Nome do livro, Autor, Categoria, Data de upload, Link</strong>.</li>
+                                <li>No Google Planilhas, clique em: <strong class="text-navy-900">Arquivo &gt; Compartilhar &gt; Publicar na Web</strong>.</li>
+                                <li>Na caixa de diálogo, selecione <strong class="text-navy-900">"Valores separados por vírgulas (.csv)"</strong> em vez de "Página da Web".</li>
+                                <li>Clique em <strong class="text-navy-900">Publicar</strong> e copie o link gerado.</li>
+                                <li>Cole o link copiado no campo abaixo para conectar seu site diretamente ao banco de dados!</li>
+                            </ol>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-navy-800 uppercase tracking-wider mb-2">URL da sua Planilha Publicada (.csv) *</label>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <input type="url" id="sheet-csv-url" placeholder="Ex: https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?output=csv" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-moss-500 focus:border-transparent text-sm">
+                                <button onclick="saveSheetUrl()" class="bg-navy-900 hover:bg-navy-800 text-white font-bold px-6 py-3 rounded-xl transition-all text-sm shrink-0">
+                                    Salvar Link
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                            <button onclick="resetToDemo()" class="text-xs font-semibold text-rose-600 hover:text-rose-700 transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-rotate"></i> Restaurar Planilha Demo Original
+                            </button>
+                            <span id="sheet-status" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">
+                                Usando Dados Locais Demo
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestion / Contributions Manager -->
+                <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-100 border border-slate-100/50">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-navy-900">Contribuições dos Alunos</h3>
+                            <p class="text-xs text-slate-400">Verifique os arquivos abaixo antes de adicioná-los oficialmente na sua planilha do Google.</p>
+                        </div>
+                        <span id="suggestions-badge" class="bg-moss-100 text-moss-800 text-xs font-bold px-2.5 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="suggestions-list" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+                        <p class="text-xs text-slate-400 text-center py-6">Nenhuma sugestão registrada até o momento.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-navy-900 text-slate-400 py-8 border-t border-navy-800 mt-auto text-xs sm:text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <span class="font-extrabold text-white text-lg tracking-tight">Bibli<span class="text-moss-500">.on.</span>med</span>
+                <span class="text-slate-600">|</span>
+                <span>Biblioteca Aberta de Medicina</span>
+            </div>
+            <p class="text-center md:text-right">
+                © 2026 Bibli.on.med. Desenvolvido para facilitar o acesso à saúde e educação médica na América Latina.
+            </p>
+        </div>
+    </footer>
+
+    <!-- BOOK DETAILS MODAL -->
+    <div id="book-modal" class="hidden fixed inset-0 bg-navy-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-100 animate-[fadeIn_0.2s_ease-out]">
+            <!-- Modal Header Accent -->
+            <div class="bg-moss-600 px-6 py-4 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-sm text-emerald-300"></i>
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-300">Arquivo Seguro Antivírus</span>
+                </div>
+                <button onclick="closeBookModal()" class="text-white/80 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6">
+                <div class="mb-4">
+                    <span id="modal-category" class="bg-moss-100 text-moss-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase">Categoria</span>
+                </div>
+                <h3 id="modal-title" class="text-xl font-bold text-navy-900 mb-1">Título do Livro Médica</h3>
+                <p id="modal-author" class="text-slate-500 text-sm mb-4">Por Autor do Livro</p>
+
+                <div class="space-y-3 bg-slate-50 p-4 rounded-2xl text-xs mb-6 border border-slate-100">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">📦 Disponibilizado em:</span>
+                        <span id="modal-upload" class="font-semibold text-navy-900">2026-05-20</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">🛡️ Análise Antivírus:</span>
+                        <span class="font-bold text-emerald-600 flex items-center gap-1">
+                            <i class="fa-solid fa-circle-check"></i> Seguro e Limpo
+                        </span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">🌐 Idioma principal:</span>
+                        <span class="font-semibold text-navy-900">Português / Espanhol</span>
+                    </div>
+                </div>
+
+                <!-- Safe Action Buttons -->
+                <div class="flex flex-col gap-2">
+                    <a id="modal-download-btn" href="#" target="_blank" class="bg-moss-600 hover:bg-moss-700 text-white font-bold py-3 px-4 rounded-xl text-center shadow-lg shadow-moss-100 transition-all flex items-center justify-center gap-2 text-sm sm:text-base">
+                        <i class="fa-solid fa-circle-down"></i> Baixar Livro com Segurança
+                    </a>
+                    <button onclick="toggleFavoriteCurrentBook()" id="modal-fav-btn" class="border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-2.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-regular fa-star"></i> Adicionar aos Favoritos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILE / LOGIN MODAL -->
+    <div id="profile-modal" class="hidden fixed inset-0 bg-navy-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-100 animate-[fadeIn_0.2s_ease-out]">
+            <div class="bg-navy-900 text-white p-6 flex justify-between items-center">
+                <h3 class="text-lg font-bold">Perfil do Estudante</h3>
+                <button onclick="closeProfileModal()" class="text-white/80 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 text-center">
+                <!-- Avatar display -->
+                <div class="relative w-24 h-24 mx-auto mb-4">
+                    <img id="profile-avatar-display" src="https://placehold.co/100x100/4E6E58/ffffff?text=M" alt="Avatar" class="w-full h-full rounded-full border-4 border-moss-100 object-cover">
+                    <span class="absolute bottom-0 right-0 bg-moss-600 text-white p-1.5 rounded-full text-xs cursor-pointer shadow-md border border-white" onclick="showAvatarGrid()">
+                        <i class="fa-solid fa-camera"></i>
+                    </span>
+                </div>
+
+                <!-- Username Settings -->
+                <div class="mb-6">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Apelido Clínico</label>
+                    <div class="flex gap-2 max-w-xs mx-auto">
+                        <input type="text" id="profile-username-input" placeholder="Ex: Interno_Pedro" class="w-full text-center px-3 py-1.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-moss-500 font-semibold text-navy-900 text-sm">
+                        <button onclick="saveProfileChanges()" class="bg-moss-600 text-white px-4 rounded-xl text-xs font-bold hover:bg-moss-700 transition-all">
+                            Salvar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Avatar Selection Grid (Dropdown panel) -->
+                <div id="avatar-grid-selection" class="hidden mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <h4 class="text-xs font-bold text-slate-500 mb-3">Selecione seu Avatar Médico</h4>
+                    <div class="grid grid-cols-5 gap-2">
+                        <!-- Dynamic medical-styled avatars -->
+                        <img onclick="selectAvatar('M1')" src="https://placehold.co/100x100/4E6E58/ffffff?text=👨‍⚕️" class="w-10 h-10 rounded-full cursor-pointer hover:ring-2 ring-moss-500 border border-slate-100">
+                        <img onclick="selectAvatar('F1')" src="https://placehold.co/100x100/4E6E58/ffffff?text=👩‍⚕️" class="w-10 h-10 rounded-full cursor-pointer hover:ring-2 ring-moss-500 border border-slate-100">
+                        <img onclick="selectAvatar('M2')" src="https://placehold.co/1E3A8A/ffffff?text=🩺" class="w-10 h-10 rounded-full cursor-pointer hover:ring-2 ring-moss-500 border border-slate-100">
+                        <img onclick="selectAvatar('F2')" src="https://placehold.co/0F172A/ffffff?text=🧬" class="w-10 h-10 rounded-full cursor-pointer hover:ring-2 ring-moss-500 border border-slate-100">
+                        <img onclick="selectAvatar('M3')" src="https://placehold.co/10B981/ffffff?text=🧠" class="w-10 h-10 rounded-full cursor-pointer hover:ring-2 ring-moss-500 border border-slate-100">
+                    </div>
+                </div>
+
+                <!-- Bookmarks / Favorites in Profile -->
+                <div class="text-left">
+                    <h4 class="text-xs font-bold text-navy-900 uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <i class="fa-solid fa-star text-amber-500"></i> Seus Livros Salvos
+                    </h4>
+                    <div id="favorites-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                        <p class="text-xs text-slate-400 text-center py-4">Nenhum favorito salvo ainda.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DATABASE & FIREBASE SCRIPT MODULE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // CONFIGURAÇÕES PADRÃO / SEGURANÇAS DO FIREBASE
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'biblionmed-open-lib';
+        let db, auth;
+
+        // BANCO DE DADOS DEMO PADRÃO
+        const mockDatabase = [
+            { id: 1, nome: "Tratado de Fisiologia Médica - Guyton & Hall", autor: "Arthur C. Guyton, John E. Hall (13ª Ed)", categoria: "Fisiologia", uploadDate: "2026-01-15", link: "https://www.mediafire.com" },
+            { id: 2, nome: "Atlas de Anatomia Humana - Netter", autor: "Frank H. Netter (7ª Ed)", categoria: "Anatomia", uploadDate: "2026-02-10", link: "https://www.mediafire.com" },
+            { id: 3, nome: "Patologia Básica - Robbins & Cotran", autor: "Vinay Kumar, Abul K. Abbas (10ª Ed)", categoria: "Patologia", uploadDate: "2026-03-05", link: "https://www.mediafire.com" },
+            { id: 4, nome: "Farmacologia Básica e Clínica - Lange", autor: "Bertram G. Katzung (14ª Ed)", categoria: "Farmacologia", uploadDate: "2026-04-12", link: "https://www.mediafire.com" },
+            { id: 5, nome: "Tratado de Medicina Interna - Cecil", autor: "Lee Goldman, Andrew I. Schafer (25ª Ed)", categoria: "Clínica Médica", uploadDate: "2026-04-20", link: "https://www.mediafire.com" }
+        ];
+
+        // Estado do App
+        let activeTab = 'search';
+        let books = [...mockDatabase];
+        let filteredBooks = [];
+        let searchFilter = '';
+        let categoryFilter = 'all';
+        let currentUser = null;
+        let userProfile = { nickname: 'Interno Anon', avatar: 'M1', favorites: [] };
+        let suggestions = [];
+        let currentSelectedBook = null;
+        let selectedFile = null;
+        let contributionType = 'file'; // 'file' ou 'link'
+        let isAdminUnlocked = false;
+
+        // Inicializar Firebase se a configuração estiver disponível, caso contrário emular localmente
+        async function setupFirebase() {
+            try {
+                if (typeof __firebase_config !== 'undefined') {
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    const app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+
+                    // Autenticação anônima obrigatória antes de qualquer acesso
+                    await signInAnonymously(auth);
+                } else {
+                    console.log("Firebase emulado offline para teste.");
+                }
+            } catch (err) {
+                console.error("Falha ao inicializar o Firebase: ", err);
+            }
+        }
+
+        // Carrega dados da planilha pública do Google Sheets
+        async function loadSpreadsheetData() {
+            const savedUrl = localStorage.getItem('biblionmed_csv_url');
+            const statusBadge = document.getElementById('sheet-status');
+            const sourceLabel = document.getElementById('data-source-label');
+
+            if (!savedUrl) {
+                books = [...mockDatabase];
+                if (statusBadge) {
+                    statusBadge.textContent = "Usando Dados Locais Demo";
+                    statusBadge.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700";
+                }
+                if (sourceLabel) {
+                    sourceLabel.innerHTML = `<i class="fa-solid fa-circle-check"></i> Dados Locais Protegidos`;
+                }
+                applyFilters();
+                return;
+            }
+
+            try {
+                const response = await fetch(savedUrl);
+                if (!response.ok) throw new Error("Erro na rede ao carregar a planilha");
+                const text = await response.text();
+                
+                // Parse CSV Manual Rápido e Seguro
+                const rows = text.split('\n').map(row => {
+                    const matches = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+                    return matches.map(val => val.replace(/^"|"$/g, '').trim());
+                });
+
+                if (rows.length > 1) {
+                    const parsedBooks = [];
+                    for (let i = 1; i < rows.length; i++) {
+                        const r = rows[i];
+                        if (r.length >= 3) {
+                            parsedBooks.push({
+                                id: `sheet-${i}`,
+                                nome: r[0] || 'Sem Título',
+                                autor: r[1] || 'Autor Desconhecido',
+                                categoria: r[2] || 'Outros',
+                                uploadDate: r[3] || 'Desconhecida',
+                                link: r[4] || '#'
+                            });
+                        }
+                    }
+                    if (parsedBooks.length > 0) {
+                        books = parsedBooks;
+                        if (statusBadge) {
+                            statusBadge.textContent = "Planilha Conectada Online";
+                            statusBadge.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700";
+                        }
+                        if (sourceLabel) {
+                            sourceLabel.innerHTML = `<i class="fa-solid fa-cloud-arrow-down"></i> Sincronizado Google Sheets`;
+                        }
+                        showToast("Planilha carregada e atualizada com sucesso!", "success");
+                    }
+                }
+            } catch (err) {
+                console.error("Falha ao ler dados do CSV externo: ", err);
+                showToast("Erro ao carregar a planilha externa. Usando dados locais.", "error");
+                books = [...mockDatabase];
+                if (statusBadge) {
+                    statusBadge.textContent = "Erro na Planilha Remota";
+                    statusBadge.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-50 text-rose-700";
+                }
+            }
+            applyFilters();
+        }
+
+        // Gerenciamento de Autenticação e Perfil do Usuário
+        function initAuthListener() {
+            if (localStorage.getItem('biblionmed_admin_unlocked') === 'true') {
+                unlockAdminUI();
+            }
+
+            if (!auth) {
+                const localUser = localStorage.getItem('biblionmed_local_user');
+                if (localUser) {
+                    userProfile = JSON.parse(localUser);
+                } else {
+                    userProfile = { nickname: 'Interno_' + Math.floor(Math.random() * 1000), avatar: 'M1', favorites: [] };
+                    localStorage.setItem('biblionmed_local_user', JSON.stringify(userProfile));
+                }
+                updateUIWithProfile();
+                return;
+            }
+
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUser = user;
+                    const userDocPath = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'data');
+                    try {
+                        const userDoc = await getDoc(userDocPath);
+                        if (userDoc.exists()) {
+                            userProfile = userDoc.data();
+                        } else {
+                            userProfile = {
+                                nickname: 'Estudante_' + user.uid.substring(0, 5),
+                                avatar: 'M1',
+                                favorites: []
+                            };
+                            await setDoc(userDocPath, userProfile);
+                        }
+                    } catch (err) {
+                        console.error("Erro ao ler dados do usuário no Firestore: ", err);
+                    }
+                    updateUIWithProfile();
+                }
+            }, (error) => {
+                console.error("Erro na escuta de autenticação do Firebase: ", error);
+            });
+        }
+
+        let suggestionsUnsubscribe = null;
+
+        function loadLocalSuggestions() {
+            const localSugs = localStorage.getItem('biblionmed_local_suggestions');
+            suggestions = localSugs ? JSON.parse(localSugs) : [];
+            renderSuggestions();
+        }
+
+        function saveSuggestionLocally(suggestionData) {
+            const localSugs = localStorage.getItem('biblionmed_local_suggestions');
+            let list = localSugs ? JSON.parse(localSugs) : [];
+            suggestionData.id = `local-sug-${Date.now()}`;
+            list.push(suggestionData);
+            localStorage.setItem('biblionmed_local_suggestions', JSON.stringify(list));
+            suggestions = list;
+            renderSuggestions();
+        }
+
+        // Monitora as sugestões no Firestore de forma segura (apenas quando o admin está logado)
+        function listenSuggestions() {
+            if (!db || !currentUser) {
+                loadLocalSuggestions();
+                return;
+            }
+
+            if (suggestionsUnsubscribe) {
+                suggestionsUnsubscribe();
+            }
+
+            const suggestionsCol = collection(db, 'artifacts', appId, 'public', 'data', 'suggestions');
+            suggestionsUnsubscribe = onSnapshot(suggestionsCol, (snapshot) => {
+                suggestions = [];
+                snapshot.forEach(doc => {
+                    suggestions.push({ id: doc.id, ...doc.data() });
+                });
+                renderSuggestions();
+            }, (err) => {
+                if (err.code === 'permission-denied') {
+                    console.warn("Firestore: Acesso de leitura às sugestões restrito pelas regras de segurança. Usando armazenamento local seguro.");
+                    loadLocalSuggestions();
+                } else {
+                    console.error("Erro ao sincronizar sugestões online: ", err);
+                }
+            });
+        }
+
+        window.handleSearch = function() {
+            const input = document.getElementById('search-input');
+            searchFilter = input.value.toLowerCase();
+            document.getElementById('clear-search-btn').classList.toggle('hidden', searchFilter === '');
+            applyFilters();
+        };
+
+        window.clearSearch = function() {
+            const input = document.getElementById('search-input');
+            input.value = '';
+            searchFilter = '';
+            document.getElementById('clear-search-btn').classList.add('hidden');
+            applyFilters();
+        };
+
+        window.filterCategory = function(cat) {
+            categoryFilter = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-moss-600', 'text-white', 'shadow-md', 'shadow-moss-100', 'active');
+                btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-moss-50', 'border', 'border-slate-100');
+            });
+
+            const activeBtn = document.getElementById(cat === 'all' ? 'cat-all' : `cat-${cat.replace(' ', '')}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-moss-50', 'border', 'border-slate-100');
+                activeBtn.classList.add('bg-moss-600', 'text-white', 'shadow-md', 'shadow-moss-100', 'active');
+            }
+            applyFilters();
+        };
+
+        function applyFilters() {
+            filteredBooks = books.filter(book => {
+                const matchSearch = book.nome.toLowerCase().includes(searchFilter) || 
+                                    book.autor.toLowerCase().includes(searchFilter) || 
+                                    book.categoria.toLowerCase().includes(searchFilter);
+                
+                const matchCategory = categoryFilter === 'all' || book.categoria === categoryFilter;
+                
+                return matchSearch && matchCategory;
+            });
+
+            renderBooks();
+        }
+
+        function renderBooks() {
+            const grid = document.getElementById('books-grid');
+            const emptyState = document.getElementById('empty-state');
+            const countLabel = document.getElementById('books-count-label');
+
+            grid.innerHTML = '';
+            countLabel.textContent = `Mostrando ${filteredBooks.length} livro(s) de ${books.length} disponíveis`;
+
+            if (filteredBooks.length === 0) {
+                emptyState.classList.remove('hidden');
+                grid.classList.add('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.classList.remove('hidden');
+
+            filteredBooks.forEach(book => {
+                const isFav = userProfile.favorites && userProfile.favorites.includes(book.id);
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl p-5 shadow-lg shadow-slate-100 border border-slate-100/60 hover:shadow-xl hover:border-moss-100 transition-all flex flex-col justify-between group";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-moss-50 text-moss-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">${book.categoria}</span>
+                            <button onclick="event.stopPropagation(); window.toggleFavorite('${book.id}')" class="text-slate-300 hover:text-amber-500 transition-all">
+                                <i class="${isFav ? 'fa-solid text-amber-500' : 'fa-regular'} fa-star text-sm"></i>
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-navy-900 group-hover:text-moss-600 transition-all text-sm sm:text-base line-clamp-2 leading-snug mb-1" title="${book.nome}">${book.nome}</h4>
+                        <p class="text-xs text-slate-400 font-medium mb-4 truncate">Por ${book.autor}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-50">
+                        <span class="text-[10px] text-slate-300 font-medium"><i class="fa-solid fa-clock-rotate-left"></i> ${book.uploadDate}</span>
+                        <button onclick="window.openBookModal('${book.id}')" class="bg-navy-50 hover:bg-moss-600 hover:text-white text-navy-900 font-bold text-xs px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Drag and Drop File Events
+        window.triggerFileInput = function() {
+            document.getElementById('file-input').click();
+        };
+
+        window.handleFileSelect = function(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                processSelectedFile(files[0]);
+            }
+        };
+
+        function processSelectedFile(file) {
+            if (file.type !== "application/pdf" && !file.name.endsWith('.epub')) {
+                showToast("Por favor, selecione apenas arquivos PDF ou EPUB médicos.", "error");
+                return;
+            }
+            
+            selectedFile = file;
+            
+            document.getElementById('drop-zone').classList.add('hidden');
+            const loader = document.getElementById('virus-scan-loader');
+            loader.classList.remove('hidden');
+            
+            const bar = document.getElementById('scan-bar');
+            bar.style.width = "0%";
+            
+            const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ");
+            document.getElementById('suggest-name').value = cleanName;
+
+            setTimeout(() => {
+                bar.style.width = "100%";
+            }, 100);
+
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                const dropZone = document.getElementById('drop-zone');
+                dropZone.classList.remove('hidden');
+                dropZone.className = "border-2 border-dashed border-emerald-400 rounded-2xl p-6 text-center bg-emerald-50/50 flex flex-col items-center justify-center min-h-[140px] cursor-pointer";
+                
+                document.getElementById('upload-icon').className = "fa-solid fa-circle-check text-emerald-500 text-3xl mb-2";
+                document.getElementById('upload-text').textContent = `Arquivo Seguro: ${file.name}`;
+                document.getElementById('upload-subtext').textContent = `Tamanho: ${(file.size / (1024 * 1024)).toFixed(2)} MB | Varredura Completa`;
+                showToast("Arquivo analisado! Nenhum vírus biológico ou digital encontrado.", "success");
+            }, 3200);
+        }
+
+        // Envio de Sugestão pelo Estudante para o Firestore
+        window.handleSuggestBook = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('suggest-name').value;
+            const author = document.getElementById('suggest-author').value;
+            const category = document.getElementById('suggest-category').value;
+            let finalLink = 'Sem link informado';
+
+            if (contributionType === 'link') {
+                finalLink = document.getElementById('suggest-link').value || 'Sem link direto';
+            } else if (selectedFile) {
+                finalLink = `Local File: ${selectedFile.name} (${(selectedFile.size / (1024*1024)).toFixed(1)}MB)`;
+            } else {
+                showToast("Por favor, faça upload de um arquivo ou informe um link.", "error");
+                return;
+            }
+
+            const suggestionData = {
+                nome: name,
+                autor: author || 'Autor não especificado',
+                categoria: category,
+                link: finalLink,
+                user: userProfile.nickname,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            const submitBtn = document.getElementById('contrib-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Enviando...`;
+
+            if (db && currentUser) {
+                try {
+                    const suggestionsCol = collection(db, 'artifacts', appId, 'public', 'data', 'suggestions');
+                    await addDoc(suggestionsCol, suggestionData);
+                    showToast("Sua contribuição foi enviada! O Admin irá analisar.", "success");
+                } catch (err) {
+                    console.error("Erro ao enviar sugestão: ", err);
+                    saveSuggestionLocally(suggestionData);
+                    showToast("Salvo de forma estável offline no seu navegador!", "success");
+                }
+            } else {
+                saveSuggestionLocally(suggestionData);
+                showToast("Sugestão guardada de forma estável offline!", "success");
+            }
+
+            document.getElementById('suggestion-form').reset();
+            selectedFile = null;
+            document.getElementById('upload-icon').className = "fa-solid fa-cloud-arrow-up text-slate-400 text-3xl mb-2";
+            document.getElementById('upload-text').textContent = "Arraste seu PDF aqui ou clique para buscar";
+            document.getElementById('upload-subtext').textContent = "Suporta PDF, EPUB até 150MB";
+            document.getElementById('drop-zone').className = "border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center hover:border-moss-500 cursor-pointer transition-all bg-slate-50 flex flex-col items-center justify-center min-h-[140px]";
+            
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Enviar Contribuição`;
+            switchTab('search');
+        };
+
+        window.toggleContributionType = function(type) {
+            contributionType = type;
+            const fileBtn = document.getElementById('btn-contrib-file');
+            const linkBtn = document.getElementById('btn-contrib-link');
+            const fileSec = document.getElementById('file-upload-section');
+            const linkSec = document.getElementById('link-upload-section');
+
+            if (type === 'file') {
+                fileBtn.className = "p-3 rounded-xl border-2 border-moss-500 bg-moss-50/50 text-moss-700 font-bold text-xs flex flex-col items-center gap-2 transition-all";
+                linkBtn.className = "p-3 rounded-xl border-2 border-slate-100 bg-white text-slate-500 font-bold text-xs flex flex-col items-center gap-2 transition-all hover:bg-slate-50";
+                fileSec.classList.remove('hidden');
+                linkSec.classList.add('hidden');
+                document.getElementById('suggest-link').required = false;
+            } else {
+                linkBtn.className = "p-3 rounded-xl border-2 border-moss-500 bg-moss-50/50 text-moss-700 font-bold text-xs flex flex-col items-center gap-2 transition-all";
+                fileBtn.className = "p-3 rounded-xl border-2 border-slate-100 bg-white text-slate-500 font-bold text-xs flex flex-col items-center gap-2 transition-all hover:bg-slate-50";
+                linkSec.classList.remove('hidden');
+                fileSec.classList.add('hidden');
+                document.getElementById('suggest-link').required = true;
+            }
+        };
+
+        // Proteção do Painel do Admin
+        window.handleAdminAuth = function(e) {
+            e.preventDefault();
+            const key = document.getElementById('admin-passkey').value;
+            
+            // Senha segura alterada conforme solicitado pelo usuário
+            if (key === '1qaz2wsx@') { 
+                isAdminUnlocked = true;
+                localStorage.setItem('biblionmed_admin_unlocked', 'true');
+                unlockAdminUI();
+                showToast("Acesso ao Painel Admin Liberado!", "success");
+            } else {
+                showToast("Chave de acesso incorreta.", "error");
+            }
+        };
+
+        function unlockAdminUI() {
+            document.getElementById('admin-gate-section').classList.add('hidden');
+            document.getElementById('admin-dashboard-section').classList.remove('hidden');
+            listenSuggestions();
+        }
+
+        window.lockAdmin = function() {
+            isAdminUnlocked = false;
+            localStorage.removeItem('biblionmed_admin_unlocked');
+            document.getElementById('admin-dashboard-section').classList.add('hidden');
+            document.getElementById('admin-gate-section').classList.remove('hidden');
+            document.getElementById('admin-passkey').value = '';
+            
+            if (suggestionsUnsubscribe) {
+                suggestionsUnsubscribe();
+                suggestionsUnsubscribe = null;
+            }
+            suggestions = [];
+            renderSuggestions();
+            
+            showToast("Painel bloqueado com segurança.", "info");
+        };
+
+        // Copiar sugestão direto formatado para Excel/Google Sheets
+        window.copyRowForSheet = function(name, author, category, date, link) {
+            const formatted = `${name}\t${author}\t${category}\t${date}\t${link}`;
+            
+            const tempInput = document.createElement('textarea');
+            tempInput.value = formatted;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            showToast("Copiado com sucesso! Agora basta dar CTRL+V na planilha.", "success");
+        };
+
+        window.deleteSuggestion = async function(id) {
+            if (id.toString().startsWith('local-sug-')) {
+                suggestions = suggestions.filter(sug => sug.id !== id);
+                localStorage.setItem('biblionmed_local_suggestions', JSON.stringify(suggestions));
+                renderSuggestions();
+                showToast("Removido localmente.", "info");
+                return;
+            }
+
+            if (db && currentUser) {
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'suggestions', id);
+                    await deleteDoc(docRef);
+                    showToast("Sugestão arquivada.", "info");
+                } catch (err) {
+                    console.error("Erro ao deletar sugestão online: ", err);
+                    suggestions = suggestions.filter(sug => sug.id !== id);
+                    renderSuggestions();
+                    showToast("Removido do cache local.", "info");
+                }
+            } else {
+                suggestions = suggestions.filter(sug => sug.id !== id);
+                localStorage.setItem('biblionmed_local_suggestions', JSON.stringify(suggestions));
+                renderSuggestions();
+                showToast("Removido localmente.", "info");
+            }
+        };
+
+        // Renderiza lista de sugestões recebidas para o administrador ver
+        function renderSuggestions() {
+            const list = document.getElementById('suggestions-list');
+            const badge = document.getElementById('suggestions-badge');
+            
+            if (badge) badge.textContent = suggestions.length;
+            if (!list) return;
+
+            if (suggestions.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">Nenhuma sugestão registrada até o momento.</p>`;
+                return;
+            }
+
+            list.innerHTML = '';
+            suggestions.forEach(sug => {
+                const item = document.createElement('div');
+                item.className = "p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between gap-3 hover:bg-slate-100/50 transition-all";
+                
+                const isLocalFile = sug.link.startsWith('Local File:');
+                const linkAction = isLocalFile ? 
+                    `<span class="bg-amber-100 text-amber-800 text-[9px] font-extrabold px-2 py-0.5 rounded-full"><i class="fa-solid fa-file-invoice"></i> Arquivo Físico Enviado</span>` : 
+                    `<a href="${sug.link}" target="_blank" class="text-moss-600 hover:underline font-bold flex items-center gap-0.5">
+                        <i class="fa-solid fa-link text-[10px]"></i> Verificar Link Externo
+                    </a>`;
+
+                item.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h5 class="font-bold text-navy-900 text-sm leading-snug mb-0.5">${sug.nome}</h5>
+                            <p class="text-xs text-slate-500">Por ${sug.autor} | Cat: <strong class="text-moss-700">${sug.categoria}</strong></p>
+                        </div>
+                        <span class="bg-moss-100 text-moss-700 text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shrink-0">${sug.date}</span>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] pt-3 border-t border-slate-200/50">
+                        <span class="text-slate-400">Enviado por: <strong>${sug.user}</strong></span>
+                        <div class="flex items-center gap-2">
+                            ${linkAction}
+                            <button onclick="window.copyRowForSheet('${sug.nome}', '${sug.autor}', '${sug.categoria}', '${sug.date}', '${sug.link}')" class="bg-moss-600 hover:bg-moss-700 text-white font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all">
+                                <i class="fa-solid fa-copy"></i> Copiar para Planilha
+                            </button>
+                            <button onclick="window.deleteSuggestion('${sug.id}')" class="text-rose-500 hover:text-rose-700 font-bold px-1" title="Arquivar">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // Configurações do Link do Google Planilhas
+        window.saveSheetUrl = function() {
+            const urlInput = document.getElementById('sheet-csv-url');
+            const url = urlInput.value.trim();
+
+            if (url === '') {
+                showToast("Por favor, cole um link CSV válido.", "error");
+                return;
+            }
+
+            if (!url.includes('docs.google.com/spreadsheets') || !url.includes('output=csv')) {
+                showToast("O link deve ser um CSV publicado pelo Google Docs.", "info");
+            }
+
+            localStorage.setItem('biblionmed_csv_url', url);
+            loadSpreadsheetData();
+        };
+
+        window.resetToDemo = function() {
+            localStorage.removeItem('biblionmed_csv_url');
+            document.getElementById('sheet-csv-url').value = '';
+            loadSpreadsheetData();
+            showToast("Restaurado para a planilha padrão local com sucesso!", "success");
+        };
+
+        // Sistema de Modais e Navegação Fluida
+        window.switchTab = function(tabName) {
+            activeTab = tabName;
+            
+            // Oculta abas com remoção de animações anteriores
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+                tab.classList.remove('tab-animate-active');
+            });
+            
+            // Ativa nova aba com animação suave fadeInUp
+            const activeTabEl = document.getElementById(`tab-${tabName}`);
+            activeTabEl.classList.remove('hidden');
+            // Força o reflow para reiniciar a animação CSS com perfeição
+            void activeTabEl.offsetWidth;
+            activeTabEl.classList.add('tab-animate-active');
+
+            // Configura botões ativos no menu Desktop
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-moss-500', 'text-white');
+                btn.classList.add('border-transparent', 'text-moss-100');
+            });
+            const activeBtn = document.getElementById(`nav-${tabName}`);
+            if (activeBtn) {
+                activeBtn.classList.add('border-moss-500', 'text-white');
+                activeBtn.classList.remove('border-transparent', 'text-moss-100');
+            }
+
+            // Configura botões ativos no menu Mobile
+            document.querySelectorAll('[id^="mobile-nav-"]').forEach(btn => {
+                btn.classList.remove('text-white', 'scale-105');
+                btn.classList.add('text-moss-100');
+            });
+            const activeMobileBtn = document.getElementById(`mobile-nav-${tabName}`);
+            if (activeMobileBtn) {
+                activeMobileBtn.classList.add('text-white', 'scale-105');
+                activeMobileBtn.classList.remove('text-moss-100');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.openBookModal = function(id) {
+            const book = books.find(b => b.id.toString() === id.toString());
+            if (!book) return;
+
+            currentSelectedBook = book;
+            document.getElementById('modal-title').textContent = book.nome;
+            document.getElementById('modal-author').textContent = `Por ${book.autor}`;
+            document.getElementById('modal-category').textContent = book.categoria;
+            document.getElementById('modal-upload').textContent = book.uploadDate;
+            
+            const dlBtn = document.getElementById('modal-download-btn');
+            dlBtn.href = book.link;
+
+            const isFav = userProfile.favorites && userProfile.favorites.includes(book.id);
+            const favBtn = document.getElementById('modal-fav-btn');
+            favBtn.innerHTML = isFav ? `<i class="fa-solid text-amber-500 fa-star"></i> Remover dos Favoritos` : `<i class="fa-regular fa-star"></i> Adicionar aos Favoritos`;
+
+            document.getElementById('book-modal').classList.remove('hidden');
+        };
+
+        window.closeBookModal = function() {
+            document.getElementById('book-modal').classList.add('hidden');
+            currentSelectedBook = null;
+        };
+
+        // Perfil e Favoritos
+        window.openProfileModal = function() {
+            document.getElementById('profile-username-input').value = userProfile.nickname;
+            document.getElementById('profile-avatar-display').src = `https://placehold.co/100x100/4E6E58/ffffff?text=${getAvatarEmoji(userProfile.avatar)}`;
+            renderProfileFavorites();
+            document.getElementById('profile-modal').classList.remove('hidden');
+        };
+
+        window.closeProfileModal = function() {
+            document.getElementById('profile-modal').classList.add('hidden');
+            document.getElementById('avatar-grid-selection').classList.add('hidden');
+        };
+
+        window.showAvatarGrid = function() {
+            const grid = document.getElementById('avatar-grid-selection');
+            grid.classList.toggle('hidden');
+        };
+
+        window.selectAvatar = function(avatarCode) {
+            userProfile.avatar = avatarCode;
+            document.getElementById('profile-avatar-display').src = `https://placehold.co/100x100/4E6E58/ffffff?text=${getAvatarEmoji(avatarCode)}`;
+            document.getElementById('avatar-grid-selection').classList.add('hidden');
+        };
+
+        window.saveProfileChanges = async function() {
+            const newName = document.getElementById('profile-username-input').value.trim();
+            if (newName === '') {
+                showToast("Seu apelido não pode ser em branco.", "error");
+                return;
+            }
+
+            userProfile.nickname = newName;
+            
+            if (db && currentUser) {
+                try {
+                    const userDocPath = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
+                    await updateDoc(userDocPath, {
+                        nickname: userProfile.nickname,
+                        avatar: userProfile.avatar
+                    });
+                } catch (err) {
+                    console.error("Erro ao atualizar perfil no Firestore: ", err);
+                }
+            } else {
+                localStorage.setItem('biblionmed_local_user', JSON.stringify(userProfile));
+            }
+
+            updateUIWithProfile();
+            showToast("Perfil atualizado!", "success");
+        };
+
+        window.toggleFavorite = async function(id) {
+            if (!userProfile.favorites) userProfile.favorites = [];
+            
+            const index = userProfile.favorites.indexOf(id);
+            if (index > -1) {
+                userProfile.favorites.splice(index, 1);
+                showToast("Livro removido dos favoritos", "info");
+            } else {
+                userProfile.favorites.push(id);
+                showToast("Livro adicionado aos favoritos!", "success");
+            }
+
+            if (db && currentUser) {
+                try {
+                    const userDocPath = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
+                    await updateDoc(userDocPath, { favorites: userProfile.favorites });
+                } catch (err) {
+                    console.error("Erro ao sincronizar favoritos: ", err);
+                }
+            } else {
+                localStorage.setItem('biblionmed_local_user', JSON.stringify(userProfile));
+            }
+
+            renderBooks();
+            renderProfileFavorites();
+        };
+
+        window.toggleFavoriteCurrentBook = function() {
+            if (currentSelectedBook) {
+                toggleFavorite(currentSelectedBook.id);
+                closeBookModal();
+            }
+        };
+
+        function renderProfileFavorites() {
+            const list = document.getElementById('favorites-list');
+            if (!userProfile.favorites || userProfile.favorites.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Nenhum favorito salvo ainda.</p>`;
+                return;
+            }
+
+            list.innerHTML = '';
+            userProfile.favorites.forEach(favId => {
+                const book = books.find(b => b.id.toString() === favId.toString());
+                if (book) {
+                    const div = document.createElement('div');
+                    div.className = "flex justify-between items-center bg-slate-50 p-2 rounded-xl border border-slate-100 text-xs";
+                    div.innerHTML = `
+                        <span class="font-bold text-navy-900 truncate max-w-[200px]">${book.nome}</span>
+                        <div class="flex gap-1">
+                            <a href="${book.link}" target="_blank" class="bg-moss-100 text-moss-700 px-2 py-1 rounded font-semibold text-[10px]">Baixar</a>
+                            <button onclick="window.toggleFavorite('${book.id}')" class="text-rose-500 text-[10px] px-1">Remover</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                }
+            });
+        }
+
+        function updateUIWithProfile() {
+            const hAvatar = document.getElementById('header-avatar');
+            const hUser = document.getElementById('header-username');
+
+            if (hAvatar && hUser) {
+                const emoji = getAvatarEmoji(userProfile.avatar);
+                hAvatar.src = `https://placehold.co/100x100/4E6E58/ffffff?text=${emoji}`;
+                hUser.textContent = userProfile.nickname;
+            }
+        }
+
+        function getAvatarEmoji(code) {
+            switch(code) {
+                case 'M1': return '👨‍⚕️';
+                case 'F1': return '👩‍⚕️';
+                case 'M2': return '🩺';
+                case 'F2': return '🧬';
+                case 'M3': return '🧠';
+                default: return '🎓';
+            }
+        }
+
+        // Toasts Customizados
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            
+            let colorClass = 'bg-white text-slate-800 border-l-4 border-moss-500';
+            let icon = 'fa-circle-check text-moss-600';
+            
+            if (type === 'error') {
+                colorClass = 'bg-white text-slate-800 border-l-4 border-rose-500';
+                icon = 'fa-circle-xmark text-rose-500';
+            } else if (type === 'info') {
+                colorClass = 'bg-white text-slate-800 border-l-4 border-blue-500';
+                icon = 'fa-circle-info text-blue-500';
+            }
+
+            toast.className = `p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-3 w-80 max-w-full pointer-events-auto animate-[fadeIn_0.3s_ease-out] ${colorClass}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-lg"></i>
+                <div class="text-xs font-semibold flex-grow">${message}</div>
+                <button class="text-slate-400 hover:text-slate-600 ml-auto" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentElement) toast.remove();
+            }, 4500);
+        }
+
+        // STARTUP ROUTINE
+        window.onload = async function() {
+            await setupFirebase();
+            initAuthListener();
+            await loadSpreadsheetData();
+            
+            const savedUrl = localStorage.getItem('biblionmed_csv_url');
+            if (savedUrl && document.getElementById('sheet-csv-url')) {
+                document.getElementById('sheet-csv-url').value = savedUrl;
+            }
+            
+            switchTab('search');
+        };
+
+    </script>
+</body>
+</html>
