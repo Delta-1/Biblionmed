@@ -757,19 +757,34 @@
             }
         }
 
-        // Carregar livros sincronizados da Planilha Google (.csv)
+        // Carregar livros sincronizados da Planilha Google (.csv) com Cache Instantâneo (SWR)
         async function loadSpreadsheetData() {
             const savedUrl = localStorage.getItem('biblionmed_csv_url');
             const targetUrl = savedUrl || DEFAULT_SHEET_URL;
             const statusBadge = document.getElementById('sheet-status');
             const sourceLabel = document.getElementById('data-source-label');
 
+            // 1. CARREGAMENTO DO CACHE LOCAL ULTRA RÁPIDO (Se já carregou antes, exibe na hora!)
+            const cachedData = localStorage.getItem('biblionmed_books_cache');
+            if (cachedData) {
+                try {
+                    books = JSON.parse(cachedData);
+                    applyFilters();
+                    if (sourceLabel) {
+                        sourceLabel.innerHTML = `<i class="fa-solid fa-bolt text-amber-500"></i> Carregado do cache instantâneo`;
+                    }
+                } catch (e) {
+                    console.error("Erro ao carregar dados do cache local:", e);
+                }
+            }
+
+            // 2. BUSCA ATUALIZAÇÃO EM SEGUNDO PLANO (Sem fazer o usuário esperar)
             try {
                 const response = await fetch(targetUrl);
                 if (!response.ok) throw new Error("Erro na rede ao carregar a planilha");
                 const text = await response.text();
                 
-                // Conversão do CSV com o novo interpretador robusto
+                // Conversão do CSV com o interpretador robusto
                 const rows = parseCSV(text);
 
                 if (rows.length > 1) {
@@ -791,6 +806,10 @@
                     }
                     if (parsedBooks.length > 0) {
                         books = parsedBooks;
+                        
+                        // Atualiza o cache local silenciosamente para a próxima visita
+                        localStorage.setItem('biblionmed_books_cache', JSON.stringify(parsedBooks));
+                        
                         if (statusBadge) {
                             if (savedUrl) {
                                 statusBadge.textContent = "Planilha Customizada Conectada";
@@ -802,16 +821,19 @@
                         }
                         if (sourceLabel) {
                             sourceLabel.innerHTML = savedUrl 
-                                ? `<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Base Customizada (Não Verificada)`
-                                : `<i class="fa-solid fa-cloud-arrow-down"></i> Sincronizado: Base Oficial`;
+                                ? `<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Base Customizada (Sincronizada)`
+                                : `<i class="fa-solid fa-circle-check text-emerald-500"></i> Sincronizado: Base Oficial`;
                         }
                     }
                 }
             } catch (err) {
-                console.error("Falha ao ler dados do CSV externo: ", err);
-                showToast("Erro ao sincronizar planilha. Usando cache de emergência se disponível.", "error");
+                console.error("Falha ao ler dados do CSV externo em segundo plano: ", err);
                 
-                // Se der erro ao ler a personalizada, reverte para a oficial padrão automaticamente
+                // Se der erro ao ler a personalizada, e não houver cache, reverte para a oficial padrão automaticamente
+                if (!cachedData) {
+                    showToast("Erro ao sincronizar planilha. Usando dados locais temporários.", "error");
+                }
+                
                 if (savedUrl) {
                     localStorage.removeItem('biblionmed_csv_url');
                     setTimeout(loadSpreadsheetData, 1500);
@@ -1667,11 +1689,16 @@
             }, 4500);
         }
 
-        window.onload = async function() {
-            await initFileIndexedDB();
-            await setupFirebase();
-            initAuthListener();
-            await loadSpreadsheetData();
+        window.onload = function() {
+            // Inicialização em segundo plano assíncrona (não-bloqueante)
+            initFileIndexedDB();
+            
+            setupFirebase().then(() => {
+                initAuthListener();
+            });
+            
+            // Dispara imediatamente a leitura do cache e sincronização da planilha
+            loadSpreadsheetData();
             
             const savedUrl = localStorage.getItem('biblionmed_csv_url');
             if (savedUrl && document.getElementById('sheet-csv-url')) {
