@@ -741,6 +741,40 @@
         let contributionType = 'file';
         let isAdminUnlocked = false;
 
+        // Sistema de renderização global de capa com tratamento elegante de erros de carregamento
+        window.createGenericBookCoverHTML = function(title, category, isSmall = false) {
+            const initials = title ? title.split(' ').map(n => n[0]).filter(c => c && c === c.toUpperCase()).slice(0, 3).join('') : 'MED';
+            const sizeClass = isSmall ? 'p-2 rounded-lg' : 'p-3 rounded-xl';
+            const fontTitleClass = isSmall ? 'text-[10px]' : 'text-xs';
+            const fontInitialsClass = isSmall ? 'text-sm' : 'text-xl';
+            const colorClass = getCategoryColorClass(category);
+
+            return `
+                <div class="w-full h-full bg-gradient-to-br ${colorClass} ${sizeClass} flex flex-col justify-between select-none relative overflow-hidden border border-white/10 shadow-inner">
+                    <!-- Spine detail line -->
+                    <div class="absolute top-0 bottom-0 left-1 w-1 bg-white/20"></div>
+                    <div class="flex flex-col gap-0.5 z-10">
+                        <span class="text-[7px] font-bold tracking-widest uppercase opacity-75">${category}</span>
+                        <h5 class="${fontTitleClass} font-black line-clamp-2 leading-tight tracking-tight">${title}</h5>
+                    </div>
+                    <div class="z-10 flex items-center justify-between border-t border-white/10 pt-1">
+                        <span class="${fontInitialsClass} font-black">${initials}</span>
+                        <i class="fa-solid fa-notes-medical text-[10px] opacity-50"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Função global de controle de erro de imagem que impede qualquer vazamento do caractere '"/>'
+        window.handleImageError = function(imgElement) {
+            const title = imgElement.getAttribute('data-title') || 'Livro Médico';
+            const category = imgElement.getAttribute('data-category') || 'Outros';
+            const parent = imgElement.parentElement;
+            if (parent) {
+                parent.innerHTML = window.createGenericBookCoverHTML(title, category, true);
+            }
+        };
+
         async function setupFirebase() {
             try {
                 if (typeof __firebase_config !== 'undefined') {
@@ -764,7 +798,7 @@
             const statusBadge = document.getElementById('sheet-status');
             const sourceLabel = document.getElementById('data-source-label');
 
-            // 1. CARREGAMENTO DO CACHE LOCAL ULTRA RÁPIDO (Se já carregou antes, exibe na hora!)
+            // 1. CARREGAMENTO DO CACHE LOCAL ULTRA RÁPIDO
             const cachedData = localStorage.getItem('biblionmed_books_cache');
             if (cachedData) {
                 try {
@@ -778,7 +812,7 @@
                 }
             }
 
-            // 2. BUSCA ATUALIZAÇÃO EM SEGUNDO PLANO (Sem fazer o usuário esperar)
+            // 2. BUSCA ATUALIZAÇÃO EM SEGUNDO PLANO
             try {
                 const response = await fetch(targetUrl);
                 if (!response.ok) throw new Error("Erro na rede ao carregar a planilha");
@@ -952,7 +986,11 @@
                 btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-moss-50', 'border', 'border-slate-100');
             });
 
-            const activeBtn = document.getElementById(cat === 'all' ? 'cat-all' : `cat-${cat.replace(' ', '')}`);
+            // AJUSTE: Mapeamento de ID para destacar corretamente a categoria "Clínica Médica"
+            let idSuffix = cat.replace(' ', '');
+            if (cat === 'Clínica Médica') idSuffix = 'Clinica';
+            
+            const activeBtn = document.getElementById(cat === 'all' ? 'cat-all' : `cat-${idSuffix}`);
             if (activeBtn) {
                 activeBtn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-moss-50', 'border', 'border-slate-100');
                 activeBtn.classList.add('bg-moss-600', 'text-white', 'shadow-md', 'shadow-moss-100', 'active');
@@ -985,29 +1023,6 @@
             }
         }
 
-        function createGenericBookCoverHTML(title, category, isSmall = false) {
-            const initials = title ? title.split(' ').map(n => n[0]).filter(c => c && c === c.toUpperCase()).slice(0, 3).join('') : 'MED';
-            const sizeClass = isSmall ? 'p-2 rounded-lg' : 'p-3 rounded-xl';
-            const fontTitleClass = isSmall ? 'text-[10px]' : 'text-xs';
-            const fontInitialsClass = isSmall ? 'text-sm' : 'text-xl';
-            const colorClass = getCategoryColorClass(category);
-
-            return `
-                <div class="w-full h-full bg-gradient-to-br ${colorClass} ${sizeClass} flex flex-col justify-between select-none relative overflow-hidden border border-white/10 shadow-inner">
-                    <!-- Spine detail line -->
-                    <div class="absolute top-0 bottom-0 left-1 w-1 bg-white/20"></div>
-                    <div class="flex flex-col gap-0.5 z-10">
-                        <span class="text-[7px] font-bold tracking-widest uppercase opacity-75">${category}</span>
-                        <h5 class="${fontTitleClass} font-black line-clamp-2 leading-tight tracking-tight">${title}</h5>
-                    </div>
-                    <div class="z-10 flex items-center justify-between border-t border-white/10 pt-1">
-                        <span class="${fontInitialsClass} font-black">${initials}</span>
-                        <i class="fa-solid fa-notes-medical text-[10px] opacity-50"></i>
-                    </div>
-                </div>
-            `;
-        }
-
         function renderBooks() {
             const grid = document.getElementById('books-grid');
             const emptyState = document.getElementById('empty-state');
@@ -1028,30 +1043,31 @@
             filteredBooks.forEach(book => {
                 const isFav = userProfile.favorites && userProfile.favorites.includes(book.id);
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-2xl p-4 shadow-lg shadow-slate-100 border border-slate-100/60 hover:shadow-xl hover:border-moss-100 transition-all flex gap-3 group";
+                card.className = "bg-white rounded-2xl p-4 shadow-lg shadow-slate-100 border border-slate-100/60 hover:shadow-xl hover:border-moss-100 transition-all flex gap-3 group min-h-[136px] min-w-0 relative overflow-hidden";
                 
+                const escapedNome = book.nome.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
                 const coverHTML = book.capa ? 
-                    `<img src="${book.capa}" alt="Capa" class="w-20 h-28 object-cover rounded-lg shadow-md shrink-0 border border-slate-100" onerror="this.onerror=null; this.parentElement.innerHTML=\`${createGenericBookCoverHTML(book.nome, book.categoria, true)}\`"/>` : 
-                    createGenericBookCoverHTML(book.nome, book.categoria, true);
+                    `<img src="${book.capa}" alt="Capa" data-title="${escapedNome}" data-category="${book.categoria}" class="w-full h-full object-cover rounded-lg shadow-md shrink-0 border border-slate-100" onerror="window.handleImageError(this)"/>` : 
+                    window.createGenericBookCoverHTML(book.nome, book.categoria, true);
 
                 card.innerHTML = `
-                    <div class="w-20 h-28 shrink-0 rounded-lg overflow-hidden relative">
+                    <div onclick="window.openBookModal('${book.id}')" class="w-20 h-28 shrink-0 rounded-lg overflow-hidden relative cursor-pointer hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 shadow-sm" title="Clique para abrir detalhes">
                         ${coverHTML}
                     </div>
-                    <div class="flex-grow flex flex-col justify-between">
-                        <div>
+                    <div class="flex-grow flex flex-col justify-between min-w-0">
+                        <div class="min-w-0">
                             <div class="flex items-center justify-between gap-1 mb-1">
-                                <span class="bg-moss-50 text-moss-700 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">${book.categoria}</span>
-                                <button onclick="event.stopPropagation(); window.toggleFavorite('${book.id}')" class="text-slate-300 hover:text-amber-500 transition-all">
+                                <span class="bg-moss-50 text-moss-700 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider truncate max-w-[70%]">${book.categoria}</span>
+                                <button onclick="event.stopPropagation(); window.toggleFavorite('${book.id}')" class="text-slate-300 hover:text-amber-500 transition-all p-1 -mr-1" title="Favoritar">
                                     <i class="${isFav ? 'fa-solid text-amber-500' : 'fa-regular'} fa-star text-xs"></i>
                                 </button>
                             </div>
-                            <h4 class="font-bold text-navy-900 group-hover:text-moss-600 transition-all text-xs sm:text-sm line-clamp-2 leading-snug mb-0.5" title="${book.nome}">${book.nome}</h4>
+                            <h4 onclick="window.openBookModal('${book.id}')" class="font-bold text-navy-900 group-hover:text-moss-600 transition-all text-xs sm:text-sm line-clamp-2 leading-snug mb-0.5 cursor-pointer" title="${book.nome}">${book.nome}</h4>
                             <p class="text-[10px] text-slate-400 font-medium truncate">Por ${book.autor}</p>
                         </div>
-                        <div class="flex items-center justify-between pt-1 border-t border-slate-50">
-                            <span class="text-[9px] text-slate-300 font-medium"><i class="fa-solid fa-clock-rotate-left"></i> ${book.uploadDate}</span>
-                            <button onclick="window.openBookModal('${book.id}')" class="bg-navy-50 hover:bg-moss-600 hover:text-white text-navy-900 font-bold text-[10px] px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1">
+                        <div class="flex items-center justify-between pt-1.5 border-t border-slate-50 gap-2 shrink-0">
+                            <span class="text-[9px] text-slate-300 font-medium truncate"><i class="fa-solid fa-clock-rotate-left"></i> ${book.uploadDate}</span>
+                            <button onclick="window.openBookModal('${book.id}')" class="bg-navy-50 hover:bg-moss-600 hover:text-white text-navy-900 font-bold text-[10px] px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 shrink-0">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar
                             </button>
                         </div>
@@ -1368,7 +1384,7 @@
                 
                 const hasFile = sug.fileId;
                 const linkAction = hasFile ? 
-                    `<button onclick="window.downloadPhysicalFile('${sug.fileId}', '${sug.nome}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-[10px] font-extrabold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all">
+                    `<button onclick="window.downloadPhysicalFile('${sug.fileId}', '${sug.nome}')" class="bg-moss-100 hover:bg-moss-200 text-moss-900 text-[10px] font-extrabold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all">
                         <i class="fa-solid fa-file-pdf"></i> Baixar PDF Original (IndexedDB)
                      </button>` : 
                     `<a href="${sug.link}" target="_blank" class="text-moss-600 hover:underline font-bold flex items-center gap-0.5 text-xs">
@@ -1515,9 +1531,10 @@
 
             const coverContainer = document.getElementById('modal-book-cover-container');
             if (book.capa) {
-                coverContainer.innerHTML = `<img src="${book.capa}" alt="Capa" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML=\`${createGenericBookCoverHTML(book.nome, book.categoria, true)}\`"/>`;
+                const escapedNome = book.nome.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                coverContainer.innerHTML = `<img src="${book.capa}" alt="Capa" data-title="${escapedNome}" data-category="${book.categoria}" class="w-full h-full object-cover" onerror="window.handleImageError(this)"/>`;
             } else {
-                coverContainer.innerHTML = createGenericBookCoverHTML(book.nome, book.categoria, true);
+                coverContainer.innerHTML = window.createGenericBookCoverHTML(book.nome, book.categoria, true);
             }
 
             const isFav = userProfile.favorites && userProfile.favorites.includes(book.id);
@@ -1575,7 +1592,7 @@
             }
 
             updateUIWithProfile();
-            showToast("Perfil atualizado!", "success");
+            showToast("Perfil updated!", "success");
             closeProfileModal();
         };
 
@@ -1697,7 +1714,7 @@
                 initAuthListener();
             });
             
-            // Dispara imediatamente a leitura do cache e sincronização da planilha
+            // Sincronização em segundo plano (SWR)
             loadSpreadsheetData();
             
             const savedUrl = localStorage.getItem('biblionmed_csv_url');
