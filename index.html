@@ -34,7 +34,7 @@
         /* Custom animations */
         @keyframes pulse-green {
             0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
+            50% { transform: scale(1.03); opacity: 0.9; }
         }
         .pulse-scan {
             animation: pulse-green 2s infinite ease-in-out;
@@ -109,14 +109,14 @@
                     <i class="fa-solid fa-circle-plus mr-1"></i> Contribuir
                 </button>
                 <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn text-moss-100 hover:text-white font-medium text-sm transition-all border-b-2 border-transparent py-1">
-                    <i class="fa-solid fa-lock mr-1"></i> Configs / Admin
+                    <i class="fa-solid fa-lock mr-1"></i> Planilha / Configs
                 </button>
             </nav>
 
             <!-- User Auth Profile Widget -->
             <div class="flex items-center gap-3">
                 <div id="user-profile-widget" class="flex items-center gap-2 bg-navy-800/80 px-3 py-1.5 rounded-full cursor-pointer hover:bg-navy-800 transition-all border border-navy-100/10" onclick="openProfileModal()">
-                    <img id="header-avatar" src="https://placehold.co/100x100/4E6E58/ffffff?text=M" alt="Avatar" class="w-7 h-7 rounded-full border border-moss-500">
+                    <img id="header-avatar" src="https://placehold.co/100x100/4E6E58/ffffff?text=📚" alt="Avatar" class="w-7 h-7 rounded-full border border-moss-500 object-cover">
                     <span id="header-username" class="text-xs font-semibold max-w-[100px] truncate">Entrar</span>
                 </div>
             </div>
@@ -139,14 +139,14 @@
         </button>
         <button onclick="switchTab('admin')" id="mobile-nav-admin" class="flex flex-col items-center gap-1 text-moss-100 active:text-white transition-all">
             <i class="fa-solid fa-lock text-lg"></i>
-            <span>Admin</span>
+            <span>Configs</span>
         </button>
     </div>
 
     <!-- MAIN CONTENT CONTAINER -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <!-- SEARCH TAB (The Google-like landing page) -->
+        <!-- SEARCH TAB -->
         <section id="tab-search" class="tab-content flex flex-col items-center justify-center min-h-[60vh] py-10 tab-animate-active">
             <!-- Brand Intro -->
             <div class="text-center mb-8 max-w-xl">
@@ -210,12 +210,12 @@
             </div>
 
             <!-- Empty State -->
-            <div id="empty-state" class="hidden flex-col items-center justify-center text-center py-12 px-4">
+            <div id="empty-state" class="hidden flex flex-col items-center justify-center text-center py-12 px-4">
                 <div class="text-moss-600/20 text-7xl mb-4">
                     <i class="fa-solid fa-book-open"></i>
                 </div>
                 <h3 class="text-lg font-bold text-navy-900 mb-1">Nenhum livro encontrado</h3>
-                <p class="text-slate-400 text-sm max-w-xs">Não encontramos correspondências com sua busca. Tente buscar termos mais gerais ou sugira este livro!</p>
+                <p class="text-slate-400 text-sm max-w-xs">Não encontramos correspondências com sua busca. Conecte sua Planilha Google no menu Admin para carregar seus livros!</p>
             </div>
         </section>
 
@@ -243,7 +243,7 @@
                     <div class="border-l-4 border-moss-500 pl-4 my-6 bg-moss-50/50 py-3 rounded-r-xl">
                         <h4 class="font-bold text-navy-900 text-sm mb-1">🛡️ Compromisso com a Segurança Biológica (e Digital!)</h4>
                         <p class="text-xs sm:text-sm text-slate-500">
-                            Todos os links de download disponibilizados no acervo são previamente verificados. Garantimos que os arquivos hospedados no MediaFire ou Google Drive estejam livres de vírus, scripts maliciosos ou propagandas abusivas. Focamos apenas no PDF limpo!
+                            Todos os links de download disponibilizados no acervo são previamente verificados. Garantimos que os arquivos hospedados estejam livres de vírus, scripts maliciosos ou propagandas abusivas. Focamos apenas no PDF limpo!
                         </p>
                     </div>
 
@@ -265,16 +265,16 @@
                         </li>
                     </ul>
 
-                    <!-- WhatsApp QR Code Integration -->
-                    <div class="mt-8 p-6 bg-emerald-50/50 rounded-3xl border border-emerald-100 flex flex-col md:flex-row items-center gap-6">
-                        <div class="w-32 h-32 shrink-0 bg-white p-2 rounded-2xl shadow-md border border-slate-100 flex items-center justify-center">
-                            <img src="image_d86c19.png" alt="QR Code Grupo WhatsApp" class="w-full h-full object-contain">
-                        </div>
+                    <!-- WhatsApp CTA Integration -->
+                    <div class="mt-8 p-6 bg-emerald-50/50 rounded-3xl border border-emerald-100 flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="flex-grow text-center md:text-left">
                             <span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Comunidade Ativa</span>
-                            <h4 class="font-extrabold text-navy-900 text-base sm:text-lg mb-1">Participe do nosso Grupo de WhatsApp!</h4>
+                            <h4 class="font-extrabold text-navy-900 text-lg mb-1">Participe do nosso Grupo de WhatsApp!</h4>
                             <p class="text-xs text-slate-500">Esclareça dúvidas, faça pedidos diretamente, e compartilhe novos livros e resumos com estudantes de medicina de toda a América Latina.</p>
                         </div>
+                        <a href="https://chat.whatsapp.com/GcjCjxItg5mIoDQLhigc1G" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 whitespace-nowrap text-sm shrink-0">
+                            <i class="fa-brands fa-whatsapp text-lg"></i> Entrar no Grupo do WhatsApp
+                        </a>
                     </div>
 
                     <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
@@ -319,7 +319,7 @@
                         <div id="drop-zone" class="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center hover:border-moss-500 cursor-pointer transition-all bg-slate-50 flex flex-col items-center justify-center min-h-[140px]" onclick="triggerFileInput()">
                             <i class="fa-solid fa-cloud-arrow-up text-slate-400 text-3xl mb-2" id="upload-icon"></i>
                             <p class="text-xs font-bold text-slate-600 mb-1" id="upload-text">Arraste seu PDF aqui ou clique para buscar</p>
-                            <p class="text-[10px] text-slate-400" id="upload-subtext">Suporta PDF, EPUB até 150MB</p>
+                            <p class="text-[10px] text-slate-400" id="upload-subtext">Sem limite de tamanho (salvamento via IndexedDB!)</p>
                             <input type="file" id="file-input" class="hidden" onchange="handleFileSelect(event)">
                         </div>
 
@@ -338,6 +338,24 @@
                     <div id="link-upload-section" class="hidden">
                         <label class="block text-xs font-bold text-navy-800 uppercase tracking-wider mb-1">Link de Download Oficial *</label>
                         <input type="url" id="suggest-link" placeholder="Ex: https://drive.google.com/... ou link do Mediafire" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-moss-500 focus:border-transparent text-sm">
+                    </div>
+
+                    <!-- Cover Upload Section (Optional but helpful) -->
+                    <div class="bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+                        <label class="block text-xs font-bold text-navy-800 uppercase tracking-wider mb-2">Upload da Capa do Livro (Opcional)</label>
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-20 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
+                                <img id="suggest-cover-preview" src="https://placehold.co/150x200/4E6E58/ffffff?text=Capa" class="w-full h-full object-cover hidden">
+                                <i id="suggest-cover-placeholder" class="fa-solid fa-image text-slate-300 text-lg"></i>
+                            </div>
+                            <div class="flex-grow">
+                                <label for="cover-file-input" class="bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs py-2 px-3 border border-slate-200 rounded-lg cursor-pointer inline-block shadow-sm">
+                                    <i class="fa-solid fa-upload mr-1"></i> Selecionar Imagem da Capa
+                                </label>
+                                <p class="text-[10px] text-slate-400 mt-1">Formatos: JPG, PNG. Recomendado formato retrato.</p>
+                                <input type="file" id="cover-file-input" accept="image/*" class="hidden" onchange="handleCoverFileSelect(this)">
+                            </div>
+                        </div>
                     </div>
 
                     <div>
@@ -419,7 +437,7 @@
                                 <i class="fa-solid fa-circle-question text-moss-600"></i> Como conectar sua própria Planilha Google?
                             </h4>
                             <ol class="text-xs text-slate-600 space-y-2 list-decimal pl-4">
-                                <li>Crie uma planilha no Google Planilhas com as colunas exatamente nesta ordem: <strong class="text-navy-900">Nome do livro, Autor, Categoria, Data de upload, Link</strong>.</li>
+                                <li>Crie uma planilha no Google Planilhas com as colunas exatamente nesta ordem: <strong class="text-navy-900">Nome do livro, Autor, Categoria, Data de upload, Link, Capa (URL)</strong>.</li>
                                 <li>No Google Planilhas, clique em: <strong class="text-navy-900">Arquivo &gt; Compartilhar &gt; Publicar na Web</strong>.</li>
                                 <li>Na caixa de diálogo, selecione <strong class="text-navy-900">"Valores separados por vírgulas (.csv)"</strong> em vez de "Página da Web".</li>
                                 <li>Clique em <strong class="text-navy-900">Publicar</strong> e copie o link gerado.</li>
@@ -439,10 +457,10 @@
 
                         <div class="flex items-center justify-between pt-4 border-t border-slate-100">
                             <button onclick="resetToDemo()" class="text-xs font-semibold text-rose-600 hover:text-rose-700 transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-rotate"></i> Restaurar Planilha Demo Original
+                                <i class="fa-solid fa-rotate"></i> Restaurar Planilha Inicial
                             </button>
                             <span id="sheet-status" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">
-                                Usando Dados Locais Demo
+                                Nenhuma Planilha Conectada
                             </span>
                         </div>
                     </div>
@@ -497,13 +515,21 @@
 
             <!-- Modal Content -->
             <div class="p-6">
-                <div class="mb-4">
-                    <span id="modal-category" class="bg-moss-100 text-moss-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase">Categoria</span>
+                <div class="flex gap-4">
+                    <!-- Book Cover Column inside Modal -->
+                    <div class="w-24 h-32 bg-slate-100 border border-slate-200 rounded-xl overflow-hidden shadow-md shrink-0 flex items-center justify-center" id="modal-book-cover-container">
+                        <!-- Loaded dynamically -->
+                    </div>
+                    <div class="flex-grow flex flex-col justify-between">
+                        <div>
+                            <span id="modal-category" class="bg-moss-100 text-moss-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase inline-block mb-2">Categoria</span>
+                            <h3 id="modal-title" class="text-lg font-bold text-navy-900 leading-snug mb-1">Título do Livro Médico</h3>
+                            <p id="modal-author" class="text-slate-500 text-xs mb-2">Por Autor do Livro</p>
+                        </div>
+                    </div>
                 </div>
-                <h3 id="modal-title" class="text-xl font-bold text-navy-900 mb-1">Título do Livro Médica</h3>
-                <p id="modal-author" class="text-slate-500 text-sm mb-4">Por Autor do Livro</p>
 
-                <div class="space-y-3 bg-slate-50 p-4 rounded-2xl text-xs mb-6 border border-slate-100">
+                <div class="space-y-3 bg-slate-50 p-4 rounded-2xl text-xs mb-6 border border-slate-100 mt-4">
                     <div class="flex justify-between">
                         <span class="text-slate-400">📦 Disponibilizado em:</span>
                         <span id="modal-upload" class="font-semibold text-navy-900">2026-05-20</span>
@@ -546,10 +572,13 @@
             <div class="p-6 text-center">
                 <!-- Avatar display -->
                 <div class="relative w-24 h-24 mx-auto mb-4">
-                    <img id="profile-avatar-display" src="https://placehold.co/100x100/4E6E58/ffffff?text=M" alt="Avatar" class="w-full h-full rounded-full border-4 border-moss-100 object-cover">
-                    <span class="absolute bottom-0 right-0 bg-moss-600 text-white p-1.5 rounded-full text-xs cursor-pointer shadow-md border border-white" onclick="showAvatarGrid()">
+                    <img id="profile-avatar-display" src="https://placehold.co/100x100/4E6E58/ffffff?text=📚" alt="Avatar" class="w-full h-full rounded-full border-4 border-moss-100 object-cover bg-slate-50">
+                    
+                    <!-- Mudança Real do Avatar (Fazer Upload Próprio de Foto) -->
+                    <label for="custom-avatar-file" class="absolute bottom-0 right-0 bg-moss-600 hover:bg-moss-700 text-white p-2 rounded-full text-xs cursor-pointer shadow-md border-2 border-white flex items-center justify-center transition-all" title="Fazer Upload de Foto Própria">
                         <i class="fa-solid fa-camera"></i>
-                    </span>
+                        <input type="file" id="custom-avatar-file" accept="image/*" class="hidden" onchange="handleProfilePhotoUpload(this)">
+                    </label>
                 </div>
 
                 <!-- Username Settings -->
@@ -563,21 +592,8 @@
                     </div>
                 </div>
 
-                <!-- Avatar Selection Grid (Dropdown panel) -->
-                <div id="avatar-grid-selection" class="hidden mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <h4 class="text-xs font-bold text-slate-500 mb-3">Selecione seu Avatar Médico</h4>
-                    <div class="grid grid-cols-5 gap-2">
-                        <!-- Dynamic medical-styled avatars -->
-                        <img onclick="selectAvatar('M1')" src="https://placehold.co/100x100/4E6E58/ffffff?text=👨‍⚕️" class="w-10 h-10 rounded-full cursor-pointer hover:ring-2 ring-moss-500 border border-slate-100">
-                        <img onclick="selectAvatar('F1')" src="https://placehold.co/100x100/4E6E58/ffffff?text=👩‍⚕️" class="w-10 h-10 rounded-full cursor-pointer hover:ring-2 ring-moss-500 border border-slate-100">
-                        <img onclick="selectAvatar('M2')" src="https://placehold.co/1E3A8A/ffffff?text=🩺" class="w-10 h-10 rounded-full cursor-pointer hover:ring-2 ring-moss-500 border border-slate-100">
-                        <img onclick="selectAvatar('F2')" src="https://placehold.co/0F172A/ffffff?text=🧬" class="w-10 h-10 rounded-full cursor-pointer hover:ring-2 ring-moss-500 border border-slate-100">
-                        <img onclick="selectAvatar('M3')" src="https://placehold.co/10B981/ffffff?text=🧠" class="w-10 h-10 rounded-full cursor-pointer hover:ring-2 ring-moss-500 border border-slate-100">
-                    </div>
-                </div>
-
                 <!-- Bookmarks / Favorites in Profile -->
-                <div class="text-left">
+                <div class="text-left mt-6">
                     <h4 class="text-xs font-bold text-navy-900 uppercase tracking-wider mb-2 flex items-center gap-1">
                         <i class="fa-solid fa-star text-amber-500"></i> Seus Livros Salvos
                     </h4>
@@ -595,34 +611,93 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // CONFIGURAÇÕES PADRÃO / SEGURANÇAS DO FIREBASE
+        // Inicializando IndexedDB para armazenamento seguro e robusto de arquivos pesados
+        let fileDatabaseInstance;
+        function initFileIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('biblionmed_physical_files_db_v2', 1);
+                request.onupgradeneeded = function(e) {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('files')) {
+                        db.createObjectStore('files');
+                    }
+                };
+                request.onsuccess = function(e) {
+                    fileDatabaseInstance = e.target.result;
+                    resolve(fileDatabaseInstance);
+                };
+                request.onerror = function(e) {
+                    console.error("Erro na inicialização do IndexedDB:", e.target.error);
+                    reject(e.target.error);
+                };
+            });
+        }
+
+        // Função para gravar arquivos físicos no IndexedDB
+        function saveFileToStorage(fileId, fileBlob) {
+            return new Promise((resolve, reject) => {
+                if (!fileDatabaseInstance) {
+                    resolve(null);
+                    return;
+                }
+                const transaction = fileDatabaseInstance.transaction(['files'], 'readwrite');
+                const store = transaction.objectStore('files');
+                const request = store.put(fileBlob, fileId);
+                request.onsuccess = () => resolve(fileId);
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+
+        // Recuperar arquivos físicos do IndexedDB para download real
+        function getFileFromStorage(fileId) {
+            return new Promise((resolve, reject) => {
+                if (!fileDatabaseInstance) {
+                    resolve(null);
+                    return;
+                }
+                const transaction = fileDatabaseInstance.transaction(['files'], 'readonly');
+                const store = transaction.objectStore('files');
+                const request = store.get(fileId);
+                request.onsuccess = (e) => resolve(e.target.result);
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+
+        // Deletar o arquivo físico para manter o armazenamento limpo
+        function deleteFileFromStorage(fileId) {
+            return new Promise((resolve, reject) => {
+                if (!fileDatabaseInstance) {
+                    resolve();
+                    return;
+                }
+                const transaction = fileDatabaseInstance.transaction(['files'], 'readwrite');
+                const store = transaction.objectStore('files');
+                const request = store.delete(fileId);
+                request.onsuccess = () => resolve();
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'biblionmed-open-lib';
         let db, auth;
 
-        // BANCO DE DADOS DEMO PADRÃO
-        const mockDatabase = [
-            { id: 1, nome: "Tratado de Fisiologia Médica - Guyton & Hall", autor: "Arthur C. Guyton, John E. Hall (13ª Ed)", categoria: "Fisiologia", uploadDate: "2026-01-15", link: "https://www.mediafire.com" },
-            { id: 2, nome: "Atlas de Anatomia Humana - Netter", autor: "Frank H. Netter (7ª Ed)", categoria: "Anatomia", uploadDate: "2026-02-10", link: "https://www.mediafire.com" },
-            { id: 3, nome: "Patologia Básica - Robbins & Cotran", autor: "Vinay Kumar, Abul K. Abbas (10ª Ed)", categoria: "Patologia", uploadDate: "2026-03-05", link: "https://www.mediafire.com" },
-            { id: 4, nome: "Farmacologia Básica e Clínica - Lange", autor: "Bertram G. Katzung (14ª Ed)", categoria: "Farmacologia", uploadDate: "2026-04-12", link: "https://www.mediafire.com" },
-            { id: 5, nome: "Tratado de Medicina Interna - Cecil", autor: "Lee Goldman, Andrew I. Schafer (25ª Ed)", categoria: "Clínica Médica", uploadDate: "2026-04-20", link: "https://www.mediafire.com" }
-        ];
+        // O acervo inicializa vazio de acordo com o pedido do usuário
+        const mockDatabase = [];
 
-        // Estado do App
         let activeTab = 'search';
-        let books = [...mockDatabase];
+        let books = [];
         let filteredBooks = [];
         let searchFilter = '';
         let categoryFilter = 'all';
         let currentUser = null;
-        let userProfile = { nickname: 'Interno Anon', avatar: 'M1', favorites: [] };
+        let userProfile = { nickname: 'Interno Anon', avatar: 'BOOK', favorites: [], customAvatar: '' };
         let suggestions = [];
         let currentSelectedBook = null;
         let selectedFile = null;
-        let contributionType = 'file'; // 'file' ou 'link'
+        let selectedCoverBase64 = ''; // Cover image stores here as optimized base64
+        let contributionType = 'file';
         let isAdminUnlocked = false;
 
-        // Inicializar Firebase se a configuração estiver disponível, caso contrário emular localmente
         async function setupFirebase() {
             try {
                 if (typeof __firebase_config !== 'undefined') {
@@ -630,8 +705,6 @@
                     const app = initializeApp(firebaseConfig);
                     db = getFirestore(app);
                     auth = getAuth(app);
-
-                    // Autenticação anônima obrigatória antes de qualquer acesso
                     await signInAnonymously(auth);
                 } else {
                     console.log("Firebase emulado offline para teste.");
@@ -641,7 +714,7 @@
             }
         }
 
-        // Carrega dados da planilha pública do Google Sheets
+        // Carregar livros sincronizados da Planilha Google (.csv)
         async function loadSpreadsheetData() {
             const savedUrl = localStorage.getItem('biblionmed_csv_url');
             const statusBadge = document.getElementById('sheet-status');
@@ -650,11 +723,11 @@
             if (!savedUrl) {
                 books = [...mockDatabase];
                 if (statusBadge) {
-                    statusBadge.textContent = "Usando Dados Locais Demo";
+                    statusBadge.textContent = "Nenhuma Planilha Conectada";
                     statusBadge.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700";
                 }
                 if (sourceLabel) {
-                    sourceLabel.innerHTML = `<i class="fa-solid fa-circle-check"></i> Dados Locais Protegidos`;
+                    sourceLabel.innerHTML = `<i class="fa-solid fa-circle-info"></i> Sem Planilha`;
                 }
                 applyFilters();
                 return;
@@ -665,7 +738,6 @@
                 if (!response.ok) throw new Error("Erro na rede ao carregar a planilha");
                 const text = await response.text();
                 
-                // Parse CSV Manual Rápido e Seguro
                 const rows = text.split('\n').map(row => {
                     const matches = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
                     return matches.map(val => val.replace(/^"|"$/g, '').trim());
@@ -682,7 +754,8 @@
                                 autor: r[1] || 'Autor Desconhecido',
                                 categoria: r[2] || 'Outros',
                                 uploadDate: r[3] || 'Desconhecida',
-                                link: r[4] || '#'
+                                link: r[4] || '#',
+                                capa: r[5] || '' // Suporte para a 6ª coluna opcional de capas
                             });
                         }
                     }
@@ -700,8 +773,8 @@
                 }
             } catch (err) {
                 console.error("Falha ao ler dados do CSV externo: ", err);
-                showToast("Erro ao carregar a planilha externa. Usando dados locais.", "error");
-                books = [...mockDatabase];
+                showToast("Erro ao carregar a planilha externa. Insira o link CSV válido.", "error");
+                books = [];
                 if (statusBadge) {
                     statusBadge.textContent = "Erro na Planilha Remota";
                     statusBadge.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-50 text-rose-700";
@@ -710,7 +783,6 @@
             applyFilters();
         }
 
-        // Gerenciamento de Autenticação e Perfil do Usuário
         function initAuthListener() {
             if (localStorage.getItem('biblionmed_admin_unlocked') === 'true') {
                 unlockAdminUI();
@@ -721,7 +793,7 @@
                 if (localUser) {
                     userProfile = JSON.parse(localUser);
                 } else {
-                    userProfile = { nickname: 'Interno_' + Math.floor(Math.random() * 1000), avatar: 'M1', favorites: [] };
+                    userProfile = { nickname: 'Interno_' + Math.floor(Math.random() * 1000), avatar: 'BOOK', favorites: [], customAvatar: '' };
                     localStorage.setItem('biblionmed_local_user', JSON.stringify(userProfile));
                 }
                 updateUIWithProfile();
@@ -739,8 +811,9 @@
                         } else {
                             userProfile = {
                                 nickname: 'Estudante_' + user.uid.substring(0, 5),
-                                avatar: 'M1',
-                                favorites: []
+                                avatar: 'BOOK',
+                                favorites: [],
+                                customAvatar: ''
                             };
                             await setDoc(userDocPath, userProfile);
                         }
@@ -765,14 +838,12 @@
         function saveSuggestionLocally(suggestionData) {
             const localSugs = localStorage.getItem('biblionmed_local_suggestions');
             let list = localSugs ? JSON.parse(localSugs) : [];
-            suggestionData.id = `local-sug-${Date.now()}`;
             list.push(suggestionData);
             localStorage.setItem('biblionmed_local_suggestions', JSON.stringify(list));
             suggestions = list;
             renderSuggestions();
         }
 
-        // Monitora as sugestões no Firestore de forma segura (apenas quando o admin está logado)
         function listenSuggestions() {
             if (!db || !currentUser) {
                 loadLocalSuggestions();
@@ -792,10 +863,10 @@
                 renderSuggestions();
             }, (err) => {
                 if (err.code === 'permission-denied') {
-                    console.warn("Firestore: Acesso de leitura às sugestões restrito pelas regras de segurança. Usando armazenamento local seguro.");
+                    console.warn("Firestore: Permissão negada. Usando armazenamento local.");
                     loadLocalSuggestions();
                 } else {
-                    console.error("Erro ao sincronizar sugestões online: ", err);
+                    console.error("Erro nas sugestões online: ", err);
                 }
             });
         }
@@ -844,6 +915,40 @@
             renderBooks();
         }
 
+        function getCategoryColorClass(category) {
+            switch(category) {
+                case 'Anatomia': return 'from-teal-600 to-teal-800 text-teal-100';
+                case 'Fisiologia': return 'from-rose-600 to-rose-800 text-rose-100';
+                case 'Patologia': return 'from-amber-600 to-amber-800 text-amber-100';
+                case 'Farmacologia': return 'from-indigo-600 to-indigo-800 text-indigo-100';
+                case 'Clínica Médica': return 'from-blue-600 to-blue-800 text-blue-100';
+                default: return 'from-slate-600 to-slate-800 text-slate-100';
+            }
+        }
+
+        function createGenericBookCoverHTML(title, category, isSmall = false) {
+            const initials = title ? title.split(' ').map(n => n[0]).filter(c => c && c === c.toUpperCase()).slice(0, 3).join('') : 'MED';
+            const sizeClass = isSmall ? 'p-2 rounded-lg' : 'p-3 rounded-xl';
+            const fontTitleClass = isSmall ? 'text-[10px]' : 'text-xs';
+            const fontInitialsClass = isSmall ? 'text-sm' : 'text-xl';
+            const colorClass = getCategoryColorClass(category);
+
+            return `
+                <div class="w-full h-full bg-gradient-to-br ${colorClass} ${sizeClass} flex flex-col justify-between select-none relative overflow-hidden border border-white/10 shadow-inner">
+                    <!-- Spine detail line -->
+                    <div class="absolute top-0 bottom-0 left-1 w-1 bg-white/20"></div>
+                    <div class="flex flex-col gap-0.5 z-10">
+                        <span class="text-[7px] font-bold tracking-widest uppercase opacity-75">${category}</span>
+                        <h5 class="${fontTitleClass} font-black line-clamp-2 leading-tight tracking-tight">${title}</h5>
+                    </div>
+                    <div class="z-10 flex items-center justify-between border-t border-white/10 pt-1">
+                        <span class="${fontInitialsClass} font-black">${initials}</span>
+                        <i class="fa-solid fa-notes-medical text-[10px] opacity-50"></i>
+                    </div>
+                </div>
+            `;
+        }
+
         function renderBooks() {
             const grid = document.getElementById('books-grid');
             const emptyState = document.getElementById('empty-state');
@@ -864,30 +969,40 @@
             filteredBooks.forEach(book => {
                 const isFav = userProfile.favorites && userProfile.favorites.includes(book.id);
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-2xl p-5 shadow-lg shadow-slate-100 border border-slate-100/60 hover:shadow-xl hover:border-moss-100 transition-all flex flex-col justify-between group";
+                card.className = "bg-white rounded-2xl p-4 shadow-lg shadow-slate-100 border border-slate-100/60 hover:shadow-xl hover:border-moss-100 transition-all flex gap-3 group";
+                
+                // Capa ou Capa Generica Minimalista
+                const coverHTML = book.capa ? 
+                    `<img src="${book.capa}" alt="Capa" class="w-20 h-28 object-cover rounded-lg shadow-md shrink-0 border border-slate-100" onerror="this.onerror=null; this.parentElement.innerHTML=\`${createGenericBookCoverHTML(book.nome, book.categoria, true)}\`"/>` : 
+                    createGenericBookCoverHTML(book.nome, book.categoria, true);
+
                 card.innerHTML = `
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="bg-moss-50 text-moss-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">${book.categoria}</span>
-                            <button onclick="event.stopPropagation(); window.toggleFavorite('${book.id}')" class="text-slate-300 hover:text-amber-500 transition-all">
-                                <i class="${isFav ? 'fa-solid text-amber-500' : 'fa-regular'} fa-star text-sm"></i>
+                    <div class="w-20 h-28 shrink-0 rounded-lg overflow-hidden relative">
+                        ${coverHTML}
+                    </div>
+                    <div class="flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-1 mb-1">
+                                <span class="bg-moss-50 text-moss-700 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">${book.categoria}</span>
+                                <button onclick="event.stopPropagation(); window.toggleFavorite('${book.id}')" class="text-slate-300 hover:text-amber-500 transition-all">
+                                    <i class="${isFav ? 'fa-solid text-amber-500' : 'fa-regular'} fa-star text-xs"></i>
+                                </button>
+                            </div>
+                            <h4 class="font-bold text-navy-900 group-hover:text-moss-600 transition-all text-xs sm:text-sm line-clamp-2 leading-snug mb-0.5" title="${book.nome}">${book.nome}</h4>
+                            <p class="text-[10px] text-slate-400 font-medium truncate">Por ${book.autor}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-1 border-t border-slate-50">
+                            <span class="text-[9px] text-slate-300 font-medium"><i class="fa-solid fa-clock-rotate-left"></i> ${book.uploadDate}</span>
+                            <button onclick="window.openBookModal('${book.id}')" class="bg-navy-50 hover:bg-moss-600 hover:text-white text-navy-900 font-bold text-[10px] px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar
                             </button>
                         </div>
-                        <h4 class="font-bold text-navy-900 group-hover:text-moss-600 transition-all text-sm sm:text-base line-clamp-2 leading-snug mb-1" title="${book.nome}">${book.nome}</h4>
-                        <p class="text-xs text-slate-400 font-medium mb-4 truncate">Por ${book.autor}</p>
-                    </div>
-                    <div class="flex items-center justify-between pt-3 border-t border-slate-50">
-                        <span class="text-[10px] text-slate-300 font-medium"><i class="fa-solid fa-clock-rotate-left"></i> ${book.uploadDate}</span>
-                        <button onclick="window.openBookModal('${book.id}')" class="bg-navy-50 hover:bg-moss-600 hover:text-white text-navy-900 font-bold text-xs px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Acessar
-                        </button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         }
 
-        // Drag and Drop File Events
         window.triggerFileInput = function() {
             document.getElementById('file-input').click();
         };
@@ -934,28 +1049,78 @@
             }, 3200);
         }
 
-        // Envio de Sugestão pelo Estudante para o Firestore
+        // Upload de Imagem de Capa do Livro (Opcional)
+        window.handleCoverFileSelect = function(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showToast("Selecione uma imagem válida para a capa do livro.", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Redimensionar e comprimir para economia extrema de memória
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 150;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    selectedCoverBase64 = canvas.toDataURL('image/jpeg', 0.6); // Comprimido 60%
+                    
+                    const preview = document.getElementById('suggest-cover-preview');
+                    const placeholder = document.getElementById('suggest-cover-placeholder');
+                    preview.src = selectedCoverBase64;
+                    preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    showToast("Capa carregada com sucesso!", "success");
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
         window.handleSuggestBook = async function(e) {
             e.preventDefault();
             const name = document.getElementById('suggest-name').value;
             const author = document.getElementById('suggest-author').value;
             const category = document.getElementById('suggest-category').value;
             let finalLink = 'Sem link informado';
+            let generatedFileId = null;
 
             if (contributionType === 'link') {
                 finalLink = document.getElementById('suggest-link').value || 'Sem link direto';
             } else if (selectedFile) {
-                finalLink = `Local File: ${selectedFile.name} (${(selectedFile.size / (1024*1024)).toFixed(1)}MB)`;
+                generatedFileId = 'phys-file-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                try {
+                    // Salvamento real do arquivo em IndexedDB (Zero limitações de tamanho!)
+                    await saveFileToStorage(generatedFileId, selectedFile);
+                    finalLink = `Local File: ${selectedFile.name} (${(selectedFile.size / (1024*1024)).toFixed(1)}MB)`;
+                } catch (err) {
+                    console.error("Erro ao persistir arquivo no IndexedDB:", err);
+                    showToast("Erro de memória ao guardar o arquivo físico.", "error");
+                    return;
+                }
             } else {
                 showToast("Por favor, faça upload de um arquivo ou informe um link.", "error");
                 return;
             }
 
             const suggestionData = {
+                id: 'sug-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
                 nome: name,
                 autor: author || 'Autor não especificado',
                 categoria: category,
                 link: finalLink,
+                fileId: generatedFileId,
+                capaBase64: selectedCoverBase64 || '', // Capa enviada
                 user: userProfile.nickname,
                 date: new Date().toISOString().split('T')[0]
             };
@@ -970,7 +1135,7 @@
                     await addDoc(suggestionsCol, suggestionData);
                     showToast("Sua contribuição foi enviada! O Admin irá analisar.", "success");
                 } catch (err) {
-                    console.error("Erro ao enviar sugestão: ", err);
+                    console.error("Erro ao enviar sugestão ao Firestore: ", err);
                     saveSuggestionLocally(suggestionData);
                     showToast("Salvo de forma estável offline no seu navegador!", "success");
                 }
@@ -979,8 +1144,14 @@
                 showToast("Sugestão guardada de forma estável offline!", "success");
             }
 
+            // Reseta formulário e estados de mídia
             document.getElementById('suggestion-form').reset();
             selectedFile = null;
+            selectedCoverBase64 = '';
+            
+            document.getElementById('suggest-cover-preview').classList.add('hidden');
+            document.getElementById('suggest-cover-placeholder').classList.remove('hidden');
+
             document.getElementById('upload-icon').className = "fa-solid fa-cloud-arrow-up text-slate-400 text-3xl mb-2";
             document.getElementById('upload-text').textContent = "Arraste seu PDF aqui ou clique para buscar";
             document.getElementById('upload-subtext').textContent = "Suporta PDF, EPUB até 150MB";
@@ -1013,12 +1184,10 @@
             }
         };
 
-        // Proteção do Painel do Admin
         window.handleAdminAuth = function(e) {
             e.preventDefault();
             const key = document.getElementById('admin-passkey').value;
             
-            // Senha segura alterada conforme solicitado pelo usuário
             if (key === '1qaz2wsx@') { 
                 isAdminUnlocked = true;
                 localStorage.setItem('biblionmed_admin_unlocked', 'true');
@@ -1048,13 +1217,38 @@
             }
             suggestions = [];
             renderSuggestions();
-            
             showToast("Painel bloqueado com segurança.", "info");
         };
 
-        // Copiar sugestão direto formatado para Excel/Google Sheets
-        window.copyRowForSheet = function(name, author, category, date, link) {
-            const formatted = `${name}\t${author}\t${category}\t${date}\t${link}`;
+        // Função para Administrador resgatar arquivos do IndexedDB para download
+        window.downloadPhysicalFile = async function(fileId, bookName) {
+            try {
+                showToast("Recuperando arquivo do banco local...", "info");
+                const fileBlob = await getFileFromStorage(fileId);
+                
+                if (!fileBlob) {
+                    showToast("Arquivo físico não foi encontrado no armazenamento deste dispositivo.", "error");
+                    return;
+                }
+
+                const downloadUrl = URL.createObjectURL(fileBlob);
+                const tempAnchor = document.createElement('a');
+                tempAnchor.href = downloadUrl;
+                tempAnchor.download = fileBlob.name || `${bookName}.pdf`;
+                document.body.appendChild(tempAnchor);
+                tempAnchor.click();
+                document.body.removeChild(tempAnchor);
+                URL.revokeObjectURL(downloadUrl);
+                
+                showToast("Download do livro físico iniciado com sucesso!", "success");
+            } catch (err) {
+                console.error("Falha ao recuperar o arquivo físico:", err);
+                showToast("Erro crítico ao carregar e baixar o arquivo físico.", "error");
+            }
+        };
+
+        window.copyRowForSheet = function(name, author, category, date, link, coverUrl) {
+            const formatted = `${name}\t${author}\t${category}\t${date}\t${link}\t${coverUrl || ''}`;
             
             const tempInput = document.createElement('textarea');
             tempInput.value = formatted;
@@ -1066,12 +1260,20 @@
             showToast("Copiado com sucesso! Agora basta dar CTRL+V na planilha.", "success");
         };
 
-        window.deleteSuggestion = async function(id) {
-            if (id.toString().startsWith('local-sug-')) {
+        window.deleteSuggestion = async function(id, fileId) {
+            if (fileId) {
+                try {
+                    await deleteFileFromStorage(fileId);
+                } catch (e) {
+                    console.error("Erro ao expurgar arquivo do IndexedDB:", e);
+                }
+            }
+
+            if (id.toString().startsWith('local-sug-') || id.toString().startsWith('sug-')) {
                 suggestions = suggestions.filter(sug => sug.id !== id);
                 localStorage.setItem('biblionmed_local_suggestions', JSON.stringify(suggestions));
                 renderSuggestions();
-                showToast("Removido localmente.", "info");
+                showToast("Sugestão removida com sucesso.", "info");
                 return;
             }
 
@@ -1094,7 +1296,7 @@
             }
         };
 
-        // Renderiza lista de sugestões recebidas para o administrador ver
+        // Renderização de sugestões recebidas para o Painel Admin
         function renderSuggestions() {
             const list = document.getElementById('suggestions-list');
             const badge = document.getElementById('suggestions-badge');
@@ -1112,29 +1314,43 @@
                 const item = document.createElement('div');
                 item.className = "p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between gap-3 hover:bg-slate-100/50 transition-all";
                 
-                const isLocalFile = sug.link.startsWith('Local File:');
-                const linkAction = isLocalFile ? 
-                    `<span class="bg-amber-100 text-amber-800 text-[9px] font-extrabold px-2 py-0.5 rounded-full"><i class="fa-solid fa-file-invoice"></i> Arquivo Físico Enviado</span>` : 
-                    `<a href="${sug.link}" target="_blank" class="text-moss-600 hover:underline font-bold flex items-center gap-0.5">
+                const hasFile = sug.fileId;
+                const linkAction = hasFile ? 
+                    `<button onclick="window.downloadPhysicalFile('${sug.fileId}', '${sug.nome}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-[10px] font-extrabold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all">
+                        <i class="fa-solid fa-file-pdf"></i> Baixar PDF Original (IndexedDB)
+                     </button>` : 
+                    `<a href="${sug.link}" target="_blank" class="text-moss-600 hover:underline font-bold flex items-center gap-0.5 text-xs">
                         <i class="fa-solid fa-link text-[10px]"></i> Verificar Link Externo
                     </a>`;
 
+                // Render Cover inside sugestões list
+                const hasCoverHTML = sug.capaBase64 ? 
+                    `<img src="${sug.capaBase64}" class="w-10 h-14 object-cover rounded shadow-sm border border-slate-200"/>` : 
+                    `<div class="w-10 h-14 bg-slate-200 flex items-center justify-center text-slate-400 rounded border border-slate-300 text-xs"><i class="fa-solid fa-image"></i></div>`;
+
                 item.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h5 class="font-bold text-navy-900 text-sm leading-snug mb-0.5">${sug.nome}</h5>
-                            <p class="text-xs text-slate-500">Por ${sug.autor} | Cat: <strong class="text-moss-700">${sug.categoria}</strong></p>
+                    <div class="flex gap-3">
+                        <div class="shrink-0">
+                            ${hasCoverHTML}
                         </div>
-                        <span class="bg-moss-100 text-moss-700 text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shrink-0">${sug.date}</span>
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h5 class="font-bold text-navy-900 text-sm leading-snug mb-0.5">${sug.nome}</h5>
+                                    <p class="text-xs text-slate-500">Por ${sug.autor} | Cat: <strong class="text-moss-700">${sug.categoria}</strong></p>
+                                </div>
+                                <span class="bg-moss-100 text-moss-700 text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shrink-0">${sug.date}</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex flex-wrap items-center justify-between gap-2 text-[10px] pt-3 border-t border-slate-200/50">
                         <span class="text-slate-400">Enviado por: <strong>${sug.user}</strong></span>
                         <div class="flex items-center gap-2">
                             ${linkAction}
-                            <button onclick="window.copyRowForSheet('${sug.nome}', '${sug.autor}', '${sug.categoria}', '${sug.date}', '${sug.link}')" class="bg-moss-600 hover:bg-moss-700 text-white font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all">
+                            <button onclick="window.copyRowForSheet('${sug.nome}', '${sug.autor}', '${sug.categoria}', '${sug.date}', '${sug.link}', '${sug.capaBase64 ? 'Capa Interna' : ''}')" class="bg-moss-600 hover:bg-moss-700 text-white font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all">
                                 <i class="fa-solid fa-copy"></i> Copiar para Planilha
                             </button>
-                            <button onclick="window.deleteSuggestion('${sug.id}')" class="text-rose-500 hover:text-rose-700 font-bold px-1" title="Arquivar">
+                            <button onclick="window.deleteSuggestion('${sug.id}', '${sug.fileId || ''}')" class="text-rose-500 hover:text-rose-700 font-bold px-1" title="Arquivar">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -1144,7 +1360,6 @@
             });
         }
 
-        // Configurações do Link do Google Planilhas
         window.saveSheetUrl = function() {
             const urlInput = document.getElementById('sheet-csv-url');
             const url = urlInput.value.trim();
@@ -1166,27 +1381,51 @@
             localStorage.removeItem('biblionmed_csv_url');
             document.getElementById('sheet-csv-url').value = '';
             loadSpreadsheetData();
-            showToast("Restaurado para a planilha padrão local com sucesso!", "success");
+            showToast("Restaurado para o banco de dados padrão.", "success");
         };
 
-        // Sistema de Modais e Navegação Fluida
+        window.handleProfilePhotoUpload = function(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showToast("Selecione apenas arquivos de imagem válida.", "error");
+                return;
+            }
+
+            if (file.size > 1.5 * 1024 * 1024) {
+                showToast("Escolha uma imagem de perfil de no máximo 1.5MB.", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const base64Image = event.target.result;
+                userProfile.customAvatar = base64Image;
+                userProfile.avatar = 'CUSTOM';
+                
+                document.getElementById('profile-avatar-display').src = base64Image;
+                showToast("Sua foto de perfil foi selecionada! Salve para registrar.", "success");
+            };
+            reader.onerror = function() {
+                showToast("Falha ao processar imagem.", "error");
+            };
+            reader.readAsDataURL(file);
+        };
+
         window.switchTab = function(tabName) {
             activeTab = tabName;
             
-            // Oculta abas com remoção de animações anteriores
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.add('hidden');
                 tab.classList.remove('tab-animate-active');
             });
             
-            // Ativa nova aba com animação suave fadeInUp
             const activeTabEl = document.getElementById(`tab-${tabName}`);
             activeTabEl.classList.remove('hidden');
-            // Força o reflow para reiniciar a animação CSS com perfeição
             void activeTabEl.offsetWidth;
             activeTabEl.classList.add('tab-animate-active');
 
-            // Configura botões ativos no menu Desktop
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('border-moss-500', 'text-white');
                 btn.classList.add('border-transparent', 'text-moss-100');
@@ -1197,7 +1436,6 @@
                 activeBtn.classList.remove('border-transparent', 'text-moss-100');
             }
 
-            // Configura botões ativos no menu Mobile
             document.querySelectorAll('[id^="mobile-nav-"]').forEach(btn => {
                 btn.classList.remove('text-white', 'scale-105');
                 btn.classList.add('text-moss-100');
@@ -1224,6 +1462,13 @@
             const dlBtn = document.getElementById('modal-download-btn');
             dlBtn.href = book.link;
 
+            const coverContainer = document.getElementById('modal-book-cover-container');
+            if (book.capa) {
+                coverContainer.innerHTML = `<img src="${book.capa}" alt="Capa" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML=\`${createGenericBookCoverHTML(book.nome, book.categoria, true)}\`"/>`;
+            } else {
+                coverContainer.innerHTML = createGenericBookCoverHTML(book.nome, book.categoria, true);
+            }
+
             const isFav = userProfile.favorites && userProfile.favorites.includes(book.id);
             const favBtn = document.getElementById('modal-fav-btn');
             favBtn.innerHTML = isFav ? `<i class="fa-solid text-amber-500 fa-star"></i> Remover dos Favoritos` : `<i class="fa-regular fa-star"></i> Adicionar aos Favoritos`;
@@ -1236,28 +1481,22 @@
             currentSelectedBook = null;
         };
 
-        // Perfil e Favoritos
         window.openProfileModal = function() {
             document.getElementById('profile-username-input').value = userProfile.nickname;
-            document.getElementById('profile-avatar-display').src = `https://placehold.co/100x100/4E6E58/ffffff?text=${getAvatarEmoji(userProfile.avatar)}`;
+            
+            const avatarImg = document.getElementById('profile-avatar-display');
+            if (userProfile.avatar === 'CUSTOM' && userProfile.customAvatar) {
+                avatarImg.src = userProfile.customAvatar;
+            } else {
+                avatarImg.src = `https://placehold.co/100x100/4E6E58/ffffff?text=${getAvatarEmoji(userProfile.avatar)}`;
+            }
+            
             renderProfileFavorites();
             document.getElementById('profile-modal').classList.remove('hidden');
         };
 
         window.closeProfileModal = function() {
             document.getElementById('profile-modal').classList.add('hidden');
-            document.getElementById('avatar-grid-selection').classList.add('hidden');
-        };
-
-        window.showAvatarGrid = function() {
-            const grid = document.getElementById('avatar-grid-selection');
-            grid.classList.toggle('hidden');
-        };
-
-        window.selectAvatar = function(avatarCode) {
-            userProfile.avatar = avatarCode;
-            document.getElementById('profile-avatar-display').src = `https://placehold.co/100x100/4E6E58/ffffff?text=${getAvatarEmoji(avatarCode)}`;
-            document.getElementById('avatar-grid-selection').classList.add('hidden');
         };
 
         window.saveProfileChanges = async function() {
@@ -1274,7 +1513,8 @@
                     const userDocPath = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
                     await updateDoc(userDocPath, {
                         nickname: userProfile.nickname,
-                        avatar: userProfile.avatar
+                        avatar: userProfile.avatar,
+                        customAvatar: userProfile.customAvatar
                     });
                 } catch (err) {
                     console.error("Erro ao atualizar perfil no Firestore: ", err);
@@ -1285,6 +1525,7 @@
 
             updateUIWithProfile();
             showToast("Perfil atualizado!", "success");
+            closeProfileModal();
         };
 
         window.toggleFavorite = async function(id) {
@@ -1351,24 +1592,23 @@
             const hUser = document.getElementById('header-username');
 
             if (hAvatar && hUser) {
-                const emoji = getAvatarEmoji(userProfile.avatar);
-                hAvatar.src = `https://placehold.co/100x100/4E6E58/ffffff?text=${emoji}`;
+                if (userProfile.avatar === 'CUSTOM' && userProfile.customAvatar) {
+                    hAvatar.src = userProfile.customAvatar;
+                } else {
+                    const emoji = getAvatarEmoji(userProfile.avatar);
+                    hAvatar.src = `https://placehold.co/100x100/4E6E58/ffffff?text=${emoji}`;
+                }
                 hUser.textContent = userProfile.nickname;
             }
         }
 
         function getAvatarEmoji(code) {
             switch(code) {
-                case 'M1': return '👨‍⚕️';
-                case 'F1': return '👩‍⚕️';
-                case 'M2': return '🩺';
-                case 'F2': return '🧬';
-                case 'M3': return '🧠';
-                default: return '🎓';
+                case 'CUSTOM': return '🩺';
+                default: return '📚'; // Ícone de livro como padrão
             }
         }
 
-        // Toasts Customizados
         function showToast(message, type = 'success') {
             const container = document.getElementById('notification-container');
             if (!container) return;
@@ -1398,8 +1638,8 @@
             }, 4500);
         }
 
-        // STARTUP ROUTINE
         window.onload = async function() {
+            await initFileIndexedDB();
             await setupFirebase();
             initAuthListener();
             await loadSpreadsheetData();
