@@ -146,11 +146,12 @@
 
         <section id="tab-search" class="tab-content flex flex-col items-center justify-center min-h-[60vh] py-10 tab-animate-active">
             <!-- Brand Intro -->
-            <div class="text-center mb-8 max-w-xl">
+            <div class="text-center mb-8 max-w-xl h-24 sm:h-20 flex flex-col justify-center">
                 <h1 class="text-4xl sm:text-5xl font-black text-navy-900 tracking-tight mb-3">
                     Bibli<span class="text-moss-600">.on.</span>med
                 </h1>
-                <p class="text-slate-500 text-sm sm:text-base font-medium" data-i18n="mainSubtitle">
+                <!-- Dynamic rotating message subtitle container -->
+                <p class="text-slate-500 text-sm sm:text-base font-medium transition-all duration-500 opacity-100" data-i18n="mainSubtitle">
                     A maior biblioteca de medicina gratuita, revisada e livre de vírus para estudantes da América Latina.
                 </p>
             </div>
@@ -175,37 +176,9 @@
                 </div>
             </div>
 
-            <div class="flex flex-wrap justify-center gap-2 mb-10 max-w-4xl px-2">
-                <button onclick="filterCategory('all')" id="cat-all" class="cat-btn active px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-moss-600 text-white shadow-md shadow-moss-100" data-i18n="catAll">
-                    Todos os Livros
-                </button>
-                <button onclick="filterCategory('Anatomia')" id="cat-Anatomia" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100" data-i18n="catAnatomia">
-                    Anatomia
-                </button>
-                <button onclick="filterCategory('Fisiologia')" id="cat-Fisiologia" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100" data-i18n="catFisiologia">
-                    Fisiologia
-                </button>
-                <button onclick="filterCategory('Patologia')" id="cat-Patologia" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100" data-i18n="catPatologia">
-                    Patologia
-                </button>
-                <button onclick="filterCategory('Farmacologia')" id="cat-Farmacologia" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100" data-i18n="catFarmacologia">
-                    Farmacologia
-                </button>
-                <button onclick="filterCategory('Clínica Médica')" id="cat-Clinica" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100" data-i18n="catClinica">
-                    Clínica Médica
-                </button>
-                <button onclick="filterCategory('Embriología')" id="cat-Embriologia" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100" data-i18n="catEmbriologia">
-                    Embriología
-                </button>
-                <button onclick="filterCategory('Bioquímica')" id="cat-Bioquimica" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100" data-i18n="catBioquimica">
-                    Bioquímica
-                </button>
-                <button onclick="filterCategory('Histologia')" id="cat-Histologia" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100" data-i18n="catHistologia">
-                    Histologia
-                </button>
-                <button onclick="filterCategory('Outros')" id="cat-Outros" class="cat-btn px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-moss-50 border border-slate-100" data-i18n="catOutros">
-                    Outros
-                </button>
+            <!-- DYNAMIC CATEGORIES CONTAINER -->
+            <div id="categories-container" class="flex flex-wrap justify-center gap-2 mb-10 max-w-4xl px-2">
+                <!-- Populated dynamically from Google Sheet Data or Offline Cache -->
             </div>
 
             <!-- Stats Bar / Source Info -->
@@ -286,6 +259,26 @@
                         <a href="https://chat.whatsapp.com/GcjCjxItg5mIoDQLhigc1G" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2 whitespace-nowrap text-sm shrink-0">
                             <i class="fa-brands fa-whatsapp text-lg"></i> <span data-i18n="waBtn">Entrar no Grupo do WhatsApp</span>
                         </a>
+                    </div>
+
+                    <!-- Developer & Open-Source Social Integrations -->
+                    <div class="mt-6 p-6 bg-slate-50 rounded-3xl border border-slate-200/60 flex flex-col md:flex-row items-center gap-6">
+                        <div class="w-20 h-20 shrink-0 bg-white rounded-2xl shadow-md border border-slate-100 flex items-center justify-center text-navy-900">
+                            <i class="fa-solid fa-code text-3xl text-moss-600"></i>
+                        </div>
+                        <div class="flex-grow text-center md:text-left">
+                            <span class="bg-moss-100 text-moss-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider mb-2 inline-block" data-i18n="devBadge">De Estudante para Estudante</span>
+                            <h4 class="font-extrabold text-navy-900 text-lg mb-1" data-i18n="devTitle">De estudante para estudante</h4>
+                            <p class="text-xs text-slate-500 mb-4" data-i18n="devDesc">Este projeto é totalmente de código aberto (Open Source) e transparente. Siga o Criador no Instagram ou explore o código-fonte diretamente no repositório oficial do GitHub!</p>
+                            <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                                <a href="https://github.com/Delta-1/Biblionmed" target="_blank" class="bg-navy-900 hover:bg-navy-800 text-white font-bold py-2.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-xs shadow-sm">
+                                    <i class="fa-brands fa-github text-sm"></i> <span data-i18n="githubBtn">GitHub do Projeto</span>
+                                </a>
+                                <a href="https://www.instagram.com/v_ctorsz" target="_blank" class="bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90 text-white font-bold py-2.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-xs shadow-sm">
+                                    <i class="fa-brands fa-instagram text-sm"></i> <span data-i18n="instagramBtn">Instagram do Criador</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
@@ -439,7 +432,7 @@
                             </div>
                         </div>
                         <button onclick="lockAdmin()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 font-semibold px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1">
-                            <i class="fa-solid fa-lock"></i> <span data-i18n="adminLockBtn">Bloquear Painel</span>
+                            <i class="fa-solid fa-lock"></i> <span data-i18n="adminLockBtn">Bloquear Panel</span>
                         </button>
                     </div>
 
@@ -642,7 +635,7 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Sistema global de feedback visual para o usuário (corrige o erro ReferenceError)
+        // Sistema global de feedback visual para o usuário
         function showToast(message, type = 'success') {
             const container = document.getElementById('notification-container');
             if (!container) return;
@@ -698,7 +691,6 @@
                 mobAbout: "Sobre",
                 mobSuggest: "Contribuir",
                 mobConfigs: "Configs",
-                mainSubtitle: "A maior biblioteca de medicina gratuita, revisada e livre de vírus para estudantes da América Latina.",
                 searchPlaceholder: "Pesquise por anatomia, autor, Robbins, Guyton, cirurgia...",
                 catAll: "Todos os Livros",
                 catAnatomia: "Anatomia",
@@ -791,7 +783,12 @@
                 profileSavedBooks: "Seus Livros Salvos",
                 profileNoFav: "Nenhum favorito salvo ainda.",
                 profileLangLabel: "Idioma do Site",
-                profileCamTitle: "Fazer Upload de Foto Própria"
+                profileCamTitle: "Fazer Upload de Foto Própria",
+                devBadge: "De Estudante para Estudante",
+                devTitle: "De estudante para estudante 🎓",
+                devDesc: "Este projeto é totalmente de código aberto (Open Source) e transparente. Siga o Criador no Instagram ou explore o código-fonte diretamente no repositório oficial do GitHub!",
+                githubBtn: "GitHub do Projeto",
+                instagramBtn: "Instagram do Criador"
             },
             es: {
                 navSearch: "Buscar Libros",
@@ -804,7 +801,6 @@
                 mobAbout: "Sobre",
                 mobSuggest: "Contribuir",
                 mobConfigs: "Configs",
-                mainSubtitle: "La mayor biblioteca de medicina gratuita, revisada y libre de virus para estudiantes de América Latina.",
                 searchPlaceholder: "Busque por anatomía, autor, Robbins, Guyton, cirugía...",
                 catAll: "Todos los Libros",
                 catAnatomia: "Anatomía",
@@ -835,13 +831,13 @@
                 howStep3Desc: "El catálogo se alimenta de una planilla en la nube gestionada activamente por nosotros.",
                 waBadge: "Comunidad Activa",
                 waTitle: "¡Únete a nuestro Grupo de WhatsApp!",
-                waDesc: "Aclara dudas, realiza pedidos directamente y comparte nuevos libros y resúmenes con estudiantes de medicina de toda América Latina.",
+                waDesc: "Aclara dudas, realiza pedidos directamente y comparte nuevos libros y resúmenes con estudiantes de medicina de toda Latina.",
                 waBtn: "Entrar al Grupo de WhatsApp",
                 aboutFooterText: "Bibli.on.med v2.5 — Creado con ❤️ para salvar vidas.",
                 aboutFooterBtn: "Iniciar Búsqueda Ahora",
                 contribTitle: "Contribuir con la Biblioteca Médica",
                 contribSub: "¡Ayuda a otros estudiantes enviando libros o enlaces útiles de forma rápida y segura!",
-                contribFile: "Enviar Archivo (PDF/EPUB)",
+                contribFile: "Enviar Arquivo (PDF/EPUB)",
                 contribLink: "Enviar Enlace Directo",
                 contribDropLabel: "Seleccionar Libro desde la Computadora/Móvil",
                 contribDropText: "Arrastra tu PDF aquí o haz clic para buscar",
@@ -862,18 +858,18 @@
                 adminTitle: "Acceso de Administrador",
                 adminSub: "Esta área está restringida para que el creador del proyecto administre la base de datos y contribuciones.",
                 adminPasskeyPlaceholder: "Escribe la Clave de Acceso",
-                adminValidateBtn: "Validar Credenciales",
+                adminValidateBtn: "Validar Credenciais",
                 adminConfigTitle: "Configuración de la Base de Datos",
                 adminConfigSub: "Define de dónde Bibli.on.med obtiene la información de los libros",
                 adminLockBtn: "Bloquear Panel",
-                adminHowToTitle: "¿Cómo conectar tu propia Planilla de Google?",
+                adminHowToTitle: "¿Como conectar tu propia Planilla de Google?",
                 adminHowToStep1: "Crea una planilla en Google Hojas de Cálculo con las columnas exactamente en este orden: Nombre del libro, Autor, Categoría, Data de upload, Link, Capa (URL).",
                 adminHowToStep2: "En Google Hojas de Cálculo, haz clic en: Archivo > Compartir > Publicar en la Web.",
                 adminHowToStep3: "En el cuadro de diálogo, selecciona \"Valores separados por comas (.csv)\" en lugar de \"Página web\".",
                 adminHowToStep4: "Haz clic en Publicar y copia el enlace generado.",
                 adminHowToStep5: "¡Pega el enlace copiado en el campo de abajo para conectar tu sitio directamente a la base de datos!",
                 adminDisclaimerTitle: "Exención de Responsabilidad sobre Bases Personalizadas",
-                adminDisclaimerDesc: "La planilla oficial del proyecto **Bibli.on.med** se revisa manualmente contra virus. Al conectar planillas externas, la plataforma no se responsabiliza de la seguridad, confiabilidad de los archivos o integridad de las redirecciones.",
+                adminDisclaimerDesc: "La planilla oficial del projeto **Bibli.on.med** se revisa manualmente contra virus. Al conectar planillas externas, la plataforma no se responsabiliza de la seguridad, confiabilidad de los archivos o integridad de las redirecciones.",
                 adminCsvLabel: "URL de tu Planilla Publicada (.csv) *",
                 adminCsvBtn: "Guardar Enlace",
                 adminRestoreBtn: "Restaurar Planilla Oficial",
@@ -882,9 +878,9 @@
                 adminNoSuggestions: "Ninguna sugerencia registrada hasta el momento.",
                 footerBrandSub: "Biblioteca Abierta de Medicina",
                 footerCopy: "© 2026 Bibli.on.med. Desarrollado para facilitar el acceso a la salud y educación médica en América Latina.",
-                modalSafeAccent: "Archivo Seguro Antivirus",
+                modalSafeAccent: "Archivo Seguro Antivírus",
                 modalSafeLabel: "Análisis Antivirus:",
-                modalSafeVal: "Seguro y Limpio",
+                modalSafeVal: "Seguro e Limpio",
                 modalUploadLabel: "Disponible en:",
                 modalLangLabel: "Idioma principal:",
                 modalLangVal: "Portugués / Español",
@@ -897,7 +893,12 @@
                 profileSavedBooks: "Tus Libros Guardados",
                 profileNoFav: "Ningún favorito guardado todavía.",
                 profileLangLabel: "Idioma del Sitio",
-                profileCamTitle: "Subir Foto Propia"
+                profileCamTitle: "Subir Foto Propia",
+                devBadge: "De Estudiante a Estudiante",
+                devTitle: "De estudiante a estudiante 🎓",
+                devDesc: "Este proyecto es completamente de código abierto (Open Source) y transparente. ¡Sigue al Creador en Instagram o explora el código fuente directamente en el repositorio oficial de GitHub!",
+                githubBtn: "GitHub del Proyecto",
+                instagramBtn: "Instagram del Creador"
             },
             en: {
                 navSearch: "Search Books",
@@ -910,7 +911,6 @@
                 mobAbout: "About",
                 mobSuggest: "Contribute",
                 mobConfigs: "Configs",
-                mainSubtitle: "The largest free, reviewed, and virus-free medical library for students in Latin America.",
                 searchPlaceholder: "Search by anatomy, author, Robbins, Guyton, surgery...",
                 catAll: "All Books",
                 catAnatomia: "Anatomy",
@@ -952,7 +952,7 @@
                 contribDropLabel: "Select Book from Computer/Phone",
                 contribDropText: "Drag your PDF here or click to browse",
                 contribDropSubtext: "No size limit (saved via IndexedDB!)",
-                scanTitle: "Performing Biological and Digital Scanning...",
+                scanTitle: "Performing Digital and Biological Scanning...",
                 scanDesc: "Inspecting code signatures for protection against trojans and adwares.",
                 contribLinkLabel: "Official Download Link *",
                 contribLinkPlaceholder: "Eg: https://drive.google.com/... or Mediafire link",
@@ -1003,8 +1003,37 @@
                 profileSavedBooks: "Your Saved Books",
                 profileNoFav: "No favorites saved yet.",
                 profileLangLabel: "Site Language",
-                profileCamTitle: "Upload Own Photo"
+                profileCamTitle: "Upload Own Photo",
+                devBadge: "From Student to Student",
+                devTitle: "From student to student 🎓",
+                devDesc: "This project is completely open source and transparent. Follow the Creator on Instagram, or explore the source code directly in the official GitHub repository!",
+                githubBtn: "Project GitHub",
+                instagramBtn: "Instagram of Creator"
             }
+        };
+
+        const subtitlePhrases = {
+            pt: [
+                "A maior biblioteca de medicina gratuita, revisada e livre de vírus para estudantes da América Latina.",
+                "Você sabia que você também pode contribuir com livros?",
+                "Tem alguma sugestão de livro? Entre em contato no grupo do WhatsApp.",
+                "Quando encontrar me avise 👀.",
+                "Está gostando da experiência? Espero que sim!"
+            ],
+            es: [
+                "La mayor biblioteca de medicina gratuita, revisada y libre de virus para estudiantes de América Latina.",
+                "¿Sabías que tú también puedes contribuir con libros?",
+                "¿Tienes alguna sugerencia de libro? Ponte en contacto en el grupo de WhatsApp.",
+                "Cuando lo encuentres avísame 👀.",
+                "¿Estás disfrutando de la experiencia? ¡Eso espero!"
+            ],
+            en: [
+                "The largest free, reviewed, and virus-free medical library for students in Latin America.",
+                "Did you know that you can also contribute books?",
+                "Have a book suggestion? Contact us in the WhatsApp group.",
+                "Let me know when you find it 👀.",
+                "Are you enjoying the experience? I hope so!"
+            ]
         };
 
         let fileDatabaseInstance;
@@ -1183,6 +1212,7 @@
             // Translate DOM elements marked with data-i18n
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
+                if (key === 'mainSubtitle') return; // Skip to avoid resetting rotating subtitle out of order
                 if (dict[key]) {
                     el.innerHTML = dict[key];
                 }
@@ -1204,6 +1234,13 @@
                 }
             });
 
+            // Sync rotating subtitle phrase immediately to match new language
+            const phrases = subtitlePhrases[lang] || subtitlePhrases['pt'];
+            const subtitleEl = document.querySelector('[data-i18n="mainSubtitle"]');
+            if (subtitleEl) {
+                subtitleEl.textContent = phrases[currentSubtitleIndex];
+            }
+
             // Synced lang selector values
             const select = document.getElementById('profile-lang-select');
             if (select) {
@@ -1213,6 +1250,25 @@
             // Reload conditional labels
             applyFilters();
             updateUIWithProfile();
+        }
+
+        let currentSubtitleIndex = 0;
+        function rotateSubtitle() {
+            const subtitleEl = document.querySelector('[data-i18n="mainSubtitle"]');
+            if (!subtitleEl) return;
+            const lang = userProfile.lang || 'pt';
+            const phrases = subtitlePhrases[lang] || subtitlePhrases['pt'];
+            
+            // Fade out transition
+            subtitleEl.style.transition = 'opacity 0.5s ease-in-out';
+            subtitleEl.style.opacity = '0';
+            
+            setTimeout(() => {
+                currentSubtitleIndex = (currentSubtitleIndex + 1) % phrases.length;
+                subtitleEl.textContent = phrases[currentSubtitleIndex];
+                // Fade back in
+                subtitleEl.style.opacity = '1';
+            }, 500);
         }
 
         async function setupFirebase() {
@@ -1231,6 +1287,41 @@
             }
         }
 
+        // RENDERS THE CATEGORY BUTTONS DYNAMICALLY FROM THE BOOKS ARRAY
+        function renderCategoryButtons() {
+            const container = document.getElementById('categories-container');
+            if (!container) return;
+
+            // Extract unique categories, ignoring empty/null values
+            const uniqueCategories = [...new Set(books.map(b => b.categoria).filter(Boolean))];
+            
+            // Sort categories alphabetically
+            uniqueCategories.sort();
+
+            const currentLang = userProfile.lang || 'pt';
+            const dict = translations[currentLang] || translations['pt'];
+            const allText = dict.catAll || "Todos os Livros";
+
+            let html = `
+                <button onclick="filterCategory('all')" id="cat-all" class="cat-btn ${categoryFilter === 'all' ? 'active bg-moss-600 text-white shadow-md shadow-moss-100' : 'bg-white text-slate-600 hover:bg-moss-50 border border-slate-100'} px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all">
+                    ${allText}
+                </button>
+            `;
+
+            uniqueCategories.forEach(cat => {
+                const isActive = categoryFilter === cat;
+                const normalizedId = 'cat-' + normalizeString(cat).replace(/\s+/g, '');
+                
+                html += `
+                    <button onclick="filterCategory('${cat}')" id="${normalizedId}" class="cat-btn ${isActive ? 'active bg-moss-600 text-white shadow-md shadow-moss-100' : 'bg-white text-slate-600 hover:bg-moss-50 border border-slate-100'} px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all">
+                        ${cat}
+                    </button>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
         async function loadSpreadsheetData() {
             const savedUrl = localStorage.getItem('biblionmed_csv_url');
             const targetUrl = savedUrl || DEFAULT_SHEET_URL;
@@ -1243,6 +1334,7 @@
                 try {
                     books = JSON.parse(cachedData);
                     applyFilters();
+                    renderCategoryButtons(); // Dynamic category render from cache
                     if (sourceLabel) {
                         const currentLang = userProfile.lang || 'pt';
                         sourceLabel.innerHTML = currentLang === 'en' 
@@ -1282,6 +1374,7 @@
                     if (parsedBooks.length > 0) {
                         books = parsedBooks;
                         localStorage.setItem('biblionmed_books_cache', JSON.stringify(parsedBooks));
+                        renderCategoryButtons(); // Refresh dynamic categories on update
                         
                         const currentLang = userProfile.lang || 'pt';
                         if (statusBadge) {
@@ -1477,19 +1570,7 @@
 
         window.filterCategory = function(cat) {
             categoryFilter = cat;
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                btn.classList.remove('bg-moss-600', 'text-white', 'shadow-md', 'shadow-moss-100', 'active');
-                btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-moss-50', 'border', 'border-slate-100');
-            });
-
-            let idSuffix = cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "");
-            if (cat === 'Clínica Médica') idSuffix = 'Clinica';
-            
-            const activeBtn = document.getElementById(cat === 'all' ? 'cat-all' : `cat-${idSuffix}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-moss-50', 'border', 'border-slate-100');
-                activeBtn.classList.add('bg-moss-600', 'text-white', 'shadow-md', 'shadow-moss-100', 'active');
-            }
+            renderCategoryButtons(); // Refresh highlighted state dynamically
             applyFilters();
         };
 
@@ -1824,19 +1905,19 @@
             suggestions = [];
             renderSuggestions();
             const currentLang = userProfile.lang || 'pt';
-            const lockMsg = currentLang === 'en' ? "Panel locked securely." : currentLang === 'es' ? "Panel bloqueado con seguridad." : "Painel bloqueado com segurança.";
+            const lockMsg = currentLang === 'en' ? "Panel locked securely." : currentLang === 'es' ? "Panel de administración bloqueado." : "Painel bloqueado com segurança.";
             showToast(lockMsg, "info");
         };
 
         window.downloadPhysicalFile = async function(fileId, bookName) {
             const currentLang = userProfile.lang || 'pt';
             try {
-                const prepMsg = currentLang === 'en' ? "Retrieving file from database..." : currentLang === 'es' ? "Recuperando archivo de la base de datos..." : "Recuperando arquivo do banco local...";
+                const prepMsg = currentLang === 'en' ? "Retrieving file from database..." : currentLang === 'es' ? "Recuperando archivo..." : "Recuperando arquivo do banco local...";
                 showToast(prepMsg, "info");
                 const fileBlob = await getFileFromStorage(fileId);
                 
                 if (!fileBlob) {
-                    const notFoundErr = currentLang === 'en' ? "Physical file was not found on this device." : currentLang === 'es' ? "El archivo físico no se encontró en este dispositivo." : "Arquivo físico não foi encontrado no armazenamento deste dispositivo.";
+                    const notFoundErr = currentLang === 'en' ? "Physical file not found on this device." : currentLang === 'es' ? "Archivo físico no encontrado." : "Arquivo físico não foi encontrado no armazenamento deste dispositivo.";
                     showToast(notFoundErr, "error");
                     return;
                 }
@@ -1850,11 +1931,11 @@
                 document.body.removeChild(tempAnchor);
                 URL.revokeObjectURL(downloadUrl);
                 
-                const doneMsg = currentLang === 'en' ? "Download started successfully!" : currentLang === 'es' ? "¡Descarga iniciada con éxito!" : "Download do livro físico iniciado com sucesso!";
+                const doneMsg = currentLang === 'en' ? "Download started!" : currentLang === 'es' ? "¡Descarga iniciada!" : "Download do livro físico iniciado com sucesso!";
                 showToast(doneMsg, "success");
             } catch (err) {
                 console.error("Retrieval error:", err);
-                const criticalErr = currentLang === 'en' ? "Critical error downloading the file." : currentLang === 'es' ? "Error crítico al descargar el archivo." : "Erro crítico ao carregar e baixar o arquivo físico.";
+                const criticalErr = currentLang === 'en' ? "Error downloading." : currentLang === 'es' ? "Error al descargar." : "Erro crítico ao carregar e baixar o arquivo físico.";
                 showToast(criticalErr, "error");
             }
         };
@@ -1870,7 +1951,7 @@
             document.body.removeChild(tempInput);
 
             const currentLang = userProfile.lang || 'pt';
-            const copiedMsg = currentLang === 'en' ? "Copied! Paste directly (CTRL+V) into your spreadsheet." : currentLang === 'es' ? "¡Copiado! Pégalo directamente (CTRL+V) en tu hoja de cálculo." : "Copiado com sucesso! Agora basta dar CTRL+V na planilha.";
+            const copiedMsg = currentLang === 'en' ? "Copied! Paste directly into your spreadsheet." : currentLang === 'es' ? "¡Copiado! Pégalo en tu hoja de cálculo." : "Copiado com sucesso! Agora basta dar CTRL+V na planilha.";
             showToast(copiedMsg, "success");
         };
 
@@ -1888,7 +1969,7 @@
                 suggestions = suggestions.filter(sug => sug.id !== id);
                 localStorage.setItem('biblionmed_local_suggestions', JSON.stringify(suggestions));
                 renderSuggestions();
-                const removeMsg = currentLang === 'en' ? "Suggestion removed successfully." : currentLang === 'es' ? "Sugerencia eliminada con éxito." : "Sugestão removida com sucesso.";
+                const removeMsg = currentLang === 'en' ? "Removed." : currentLang === 'es' ? "Eliminado." : "Sugestão removida com sucesso.";
                 showToast(removeMsg, "info");
                 return;
             }
@@ -1897,12 +1978,12 @@
                 try {
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'suggestions', id);
                     await deleteDoc(docRef);
-                    showToast(currentLang === 'en' ? "Suggestion archived." : currentLang === 'es' ? "Sugerencia archivada." : "Sugestão arquivada.", "info");
+                    showToast(currentLang === 'en' ? "Archived." : currentLang === 'es' ? "Archivado." : "Sugestão arquivada.", "info");
                 } catch (err) {
                     console.error("Error deleting suggest: ", err);
                     suggestions = suggestions.filter(sug => sug.id !== id);
                     renderSuggestions();
-                    showToast(currentLang === 'en' ? "Removed from local cache." : currentLang === 'es' ? "Eliminado de la caché local." : "Removido do cache local.", "info");
+                    showToast(currentLang === 'en' ? "Removed from cache." : currentLang === 'es' ? "Eliminado de la caché." : "Removido do cache local.", "info");
                 }
             } else {
                 suggestions = suggestions.filter(sug => sug.id !== id);
@@ -1922,7 +2003,7 @@
             const currentLang = userProfile.lang || 'pt';
 
             if (suggestions.length === 0) {
-                const noSug = currentLang === 'en' ? "No suggestions registered so far." : currentLang === 'es' ? "Ninguna sugerencia registrada hasta el momento." : "Nenhuma sugestão registrada até o momento.";
+                const noSug = currentLang === 'en' ? "No suggestions registered." : currentLang === 'es' ? "Ninguna sugerencia registrada." : "Nenhuma sugestão registrada até o momento.";
                 list.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">${noSug}</p>`;
                 return;
             }
@@ -1934,7 +2015,7 @@
                 
                 const hasFile = sug.fileId;
                 const fileDownloadBtnText = currentLang === 'en' ? "Download PDF (IndexedDB)" : currentLang === 'es' ? "Descargar PDF (IndexedDB)" : "Baixar PDF Original (IndexedDB)";
-                const verifyLinkText = currentLang === 'en' ? "Verify External Link" : currentLang === 'es' ? "Verificar Enlace Externo" : "Verificar Link Externo";
+                const verifyLinkText = currentLang === 'en' ? "Verify Link" : currentLang === 'es' ? "Verificar Enlace" : "Verificar Link Externo";
                 const copyBtnText = currentLang === 'en' ? "Copy Row" : currentLang === 'es' ? "Copiar Fila" : "Copiar para Planilha";
                 const authorText = currentLang === 'en' ? 'By' : currentLang === 'es' ? 'Por' : 'Por';
                 const sentByText = currentLang === 'en' ? 'Sent by:' : currentLang === 'es' ? 'Enviado por:' : 'Enviado por:';
@@ -2276,6 +2357,9 @@
             }
             
             switchTab('search');
+
+            // Starts rotating the engaging subtitles loop dynamically
+            setInterval(rotateSubtitle, 12000);
         };
 
     </script>
